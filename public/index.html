@@ -1,193 +1,1619 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Shaquille Gurung — Builder of AI products</title>
-  <meta name="description" content="Shaquille Gurung builds AI-powered products people can actually trust — from school management to insurance claims. This is the home for my work." />
-  <link rel="canonical" href="https://shaquillegurung.com/" />
-  <meta name="theme-color" content="#0b0d12" />
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shaquille Gurung — AI you can actually trust</title>
+<meta name="description" content="Shaquille Gurung builds AI products people can actually trust — software that quotes its sources, admits what it can't verify, and keeps a human in control.">
+<link rel="canonical" href="https://shaquillegurung.com">
 
-  <!-- Open Graph / Twitter -->
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://shaquillegurung.com/" />
-  <meta property="og:title" content="Shaquille Gurung — Builder of AI products" />
-  <meta property="og:description" content="I build AI-powered products people can actually trust. This is the home for my work." />
-  <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Shaquille Gurung — Builder of AI products" />
-  <meta name="twitter:description" content="I build AI-powered products people can actually trust." />
+<!-- Open Graph / Twitter -->
+<meta property="og:title" content="Shaquille Gurung — AI you can actually trust">
+<meta property="og:description" content="A solo founder building calm, honest AI for real-world problems. This page doesn't describe trustworthy AI — it performs it.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://shaquillegurung.com">
+<!-- og:image — the ONE asset placeholder to supply. Replace with a real 1200x630 PNG at deploy. -->
+<meta property="og:image" content="https://shaquillegurung.com/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Shaquille Gurung — AI you can actually trust">
+<meta name="twitter:description" content="Software that quotes its sources, admits what it can't verify, and keeps a human in control.">
+<meta name="twitter:image" content="https://shaquillegurung.com/og.png">
 
-  <link rel="stylesheet" href="/style.css" />
+<meta name="theme-color" content="#F4F1EA" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14130F" media="(prefers-color-scheme: dark)">
+
+<!-- Inline SVG favicon: hairline loupe mark on bone paper, mono 'Sg' -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='5' fill='%23F4F1EA'/%3E%3Ccircle cx='13' cy='13' r='7.2' fill='none' stroke='%231A1714' stroke-width='1.6'/%3E%3Cline x1='18.3' y1='18.3' x2='25' y2='25' stroke='%232F6B4F' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E">
+
+<!-- Fonts: VARIABLE faces with live axes -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,100..900,0..100;1,9..144,100..900,0..100&family=Hanken+Grotesque:wght@300..800&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=geist-mono@400,500&amp;display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   THE HONEST ENGINE — design tokens
+   ============================================================ */
+:root{
+  --paper:#F4F1EA;        /* warm bone */
+  --paper-sunk:#ECE6DA;   /* recessed panels / source cards */
+  --ink:#1A1714;          /* warm near-black, high-confidence */
+  --ink-mid:#6E665C;      /* mid / secondary */
+  --uncertain:#A89F90;    /* low-confidence — only on short secondary text + motion + label */
+  --hairline:rgba(26,23,20,0.14);
+  --baseline:rgba(26,23,20,0.06);
+  --verified:#2F6B4F;     /* deep botanical green — confirmed-true ONLY */
+  --flag:#B4532A;         /* burnt sienna — admitted limits ONLY */
+
+  --serif:"Fraunces", "Iowan Old Style", Georgia, "Times New Roman", serif;
+  --sans:"Hanken Grotesque", system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  --mono:"Geist Mono", ui-monospace, "SF Mono", "Cascadia Code", Menlo, monospace;
+
+  --ease:cubic-bezier(0.22,0.61,0.36,1);
+
+  /* fluid type — minor-third → perfect-fourth */
+  --step--1: clamp(0.78rem, 0.74rem + 0.18vw, 0.9rem);
+  --step-0:  clamp(1rem, 0.95rem + 0.3vw, 1.2rem);
+  --step-1:  clamp(1.2rem, 1.08rem + 0.6vw, 1.6rem);
+  --step-2:  clamp(1.5rem, 1.25rem + 1.1vw, 2.4rem);
+  --step-3:  clamp(1.95rem, 1.4rem + 2.4vw, 3.6rem);
+  --hero:    clamp(2.6rem, 1.15rem + 7.1vw, 8.4rem);
+
+  --maxw:1180px;
+  --sp:8px;
+
+  --bg:var(--paper);
+  --bg-sunk:var(--paper-sunk);
+}
+
+html[data-theme="dark"]{
+  --paper:#14130F;
+  --paper-sunk:#1E1C16;
+  --ink:#F2EFE7;
+  --ink-mid:#A39A8C;     /* lifted for AA on dark ground */
+  --uncertain:#8C8475;   /* still clearly secondary, clears AA for short text */
+  --hairline:rgba(242,239,231,0.16);
+  --baseline:rgba(242,239,231,0.07);
+  --verified:#4FA37E;    /* brightened for AA */
+  --flag:#D9774B;
+  --bg:var(--paper);
+  --bg-sunk:var(--paper-sunk);
+}
+
+*{box-sizing:border-box;}
+html{ -webkit-text-size-adjust:100%; }
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-weight:400;
+  font-size:var(--step-0);
+  line-height:1.55;
+  font-optical-sizing:auto;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+  overflow-x:hidden;
+  transition:background .5s var(--ease), color .5s var(--ease);
+}
+body.no-cursor{cursor:auto;}
+
+/* paper grain — the ONLY texture */
+.grain{
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  opacity:.03; mix-blend-mode:multiply;
+}
+html[data-theme="dark"] .grain{ mix-blend-mode:screen; opacity:.04; }
+
+::selection{ background:var(--verified); color:var(--paper); }
+
+a{ color:inherit; text-decoration:none; }
+
+h1,h2,h3{ margin:0; font-family:var(--serif); font-weight:480; letter-spacing:-0.03em; line-height:0.97; }
+
+/* mono register — every machine-measured value */
+.mono{
+  font-family:var(--mono);
+  font-feature-settings:"ss01";
+  letter-spacing:0.01em;
+}
+.kicker{
+  font-family:var(--mono);
+  text-transform:uppercase;
+  letter-spacing:0.1em;
+  font-size:var(--step--1);
+  color:var(--ink-mid);
+  font-weight:400;
+}
+
+/* ---------- focus ---------- */
+:focus{ outline:none; }
+:focus-visible{
+  outline:2px solid var(--verified);
+  outline-offset:3px;
+  border-radius:2px;
+}
+
+/* ============================================================
+   GRID SHELL
+   ============================================================ */
+.shell{
+  position:relative; z-index:1;
+  max-width:var(--maxw);
+  margin:0 auto;
+  padding:0 clamp(20px, 4vw, 56px);
+}
+
+/* left margin index — running chrome of an instrument */
+.margin-index{
+  position:fixed;
+  top:0; left:0; bottom:0;
+  width:clamp(56px, 7vw, 96px);
+  z-index:40;
+  display:flex; flex-direction:column;
+  justify-content:space-between;
+  align-items:center;
+  padding:22px 0;
+  border-right:1px solid var(--hairline);
+  background:color-mix(in srgb, var(--bg) 86%, transparent);
+  backdrop-filter:blur(2px);
+}
+.mi-mark{ font-family:var(--serif); font-weight:600; font-size:18px; letter-spacing:-0.04em; }
+.mi-nav{ display:flex; flex-direction:column; gap:14px; align-items:center; }
+.mi-nav a{
+  font-family:var(--mono); font-size:11px; color:var(--ink-mid);
+  letter-spacing:0.04em;
+  transition:color .25s var(--ease), transform .25s var(--ease);
+  position:relative;
+}
+.mi-nav a[aria-current="true"]{ color:var(--ink); transform:scale(1.35); font-weight:500; }
+.mi-nav a[aria-current="true"]::before{
+  content:""; position:absolute; left:-9px; top:50%; transform:translateY(-50%);
+  width:4px; height:4px; border-radius:50%; background:var(--verified);
+}
+.mi-foot{ display:flex; flex-direction:column; gap:10px; align-items:center; }
+.mi-clock{ font-family:var(--mono); font-size:10px; color:var(--ink-mid); writing-mode:vertical-rl; letter-spacing:0.12em; }
+.mi-foot a{ font-family:var(--mono); font-size:10px; color:var(--ink-mid); }
+.mi-foot a:hover{ color:var(--verified); }
+
+@media (max-width:768px){
+  .margin-index{
+    position:sticky; flex-direction:row; width:100%; height:auto; bottom:auto;
+    padding:8px clamp(14px,4vw,20px); border-right:none; border-bottom:1px solid var(--hairline);
+    gap:14px; justify-content:space-between;
+  }
+  .mi-nav{ flex-direction:row; gap:11px; }
+  .mi-clock{ writing-mode:horizontal-tb; }
+  .mi-foot{ flex-direction:row; gap:12px; }
+}
+
+.page{ margin-left:clamp(56px, 7vw, 96px); }
+@media (max-width:768px){ .page{ margin-left:0; } }
+
+/* ---------- masthead ---------- */
+.masthead{
+  display:flex; align-items:flex-end; justify-content:space-between;
+  gap:24px; flex-wrap:wrap;
+  padding:30px 0 22px;
+  border-bottom:1px solid var(--hairline);
+}
+.wordmark{ font-family:var(--serif); font-size:var(--step-1); font-weight:520; letter-spacing:-0.03em; }
+.masthead .kicker{ display:block; margin-top:4px; }
+.mast-right{ display:flex; align-items:center; gap:14px; }
+
+.btn-ghost{
+  font-family:var(--mono); font-size:var(--step--1); letter-spacing:0.04em;
+  padding:9px 13px; border:1px solid var(--hairline); border-radius:2px;
+  background:transparent; color:var(--ink); cursor:pointer;
+  transition:border-color .25s var(--ease), color .25s var(--ease);
+  display:inline-flex; align-items:center; gap:7px;
+}
+.btn-ghost:hover{ border-color:var(--ink); }
+#contactBtn{ will-change:transform; }
+#contactBtn:hover{ border-color:var(--verified); color:var(--verified); }
+
+.theme-toggle{
+  width:36px; height:36px; display:grid; place-items:center;
+  border:1px solid var(--hairline); border-radius:2px; background:transparent;
+  cursor:pointer; color:var(--ink); transition:border-color .25s var(--ease);
+}
+.theme-toggle:hover{ border-color:var(--ink); }
+.theme-toggle svg{ width:16px; height:16px; }
+
+/* ============================================================
+   SECTIONS
+   ============================================================ */
+section{ padding:clamp(70px,9vw,128px) 0; border-bottom:1px solid var(--hairline); }
+.sec-head{ display:flex; align-items:baseline; gap:16px; margin-bottom:clamp(28px,4vw,52px); }
+.sec-num{ font-family:var(--mono); font-size:var(--step--1); color:var(--ink-mid); letter-spacing:0.08em; }
+.sec-title{ font-size:var(--step-2); }
+
+/* asymmetric 7/5 split */
+.split{ display:grid; grid-template-columns:7fr 5fr; gap:clamp(28px,4vw,64px); align-items:start; }
+@media (max-width:880px){ .split{ grid-template-columns:1fr; gap:36px; } }
+
+/* baseline graph-paper rule under readouts */
+.baseline-rule{
+  background-image:repeating-linear-gradient(to bottom, transparent 0 27px, var(--baseline) 27px 28px);
+}
+
+/* ---------- 01 HERO ---------- */
+.hero{ padding-top:clamp(40px,6vw,72px); }
+.hero-thesis{
+  font-family:var(--serif);
+  font-size:var(--hero);
+  line-height:0.95;
+  letter-spacing:-0.035em;
+  font-weight:380;
+  max-width:14ch;
+  margin:0 0 14px;
+  cursor:default;
+}
+.hero-thesis .word{ display:inline-block; white-space:nowrap; }
+.hero-thesis .glyph{ display:inline-block; font-variation-settings:"opsz" 96, "wght" 360, "SOFT" 0; will-change:font-variation-settings, transform; }
+.hero-thesis .accent{ color:var(--flag); font-style:italic; }
+.hero-cue{ margin-bottom:clamp(40px,5vw,64px); }
+
+/* engine canvas */
+.engine{
+  border:1px solid var(--hairline);
+  background:var(--bg-sunk);
+  border-radius:3px;
+  overflow:hidden;
+}
+.engine-bar{
+  display:flex; align-items:center; gap:10px;
+  padding:11px 16px; border-bottom:1px solid var(--hairline);
+}
+.engine-bar .dot{ width:7px; height:7px; border-radius:50%; background:var(--ink-mid); opacity:.4; }
+.engine-q{ font-family:var(--mono); font-size:var(--step--1); color:var(--ink); }
+.engine-q .you{ color:var(--ink-mid); }
+.engine-body{ display:grid; grid-template-columns:1fr 280px; gap:0; }
+@media (max-width:760px){ .engine-body{ grid-template-columns:1fr; } }
+
+.engine-answer{
+  position:relative;
+  padding:clamp(20px,3vw,34px);
+  font-family:var(--serif);
+  font-size:var(--step-1);
+  line-height:1.5;
+  letter-spacing:-0.01em;
+}
+.tok{
+  display:inline;
+  font-variation-settings:"opsz" 32, "wght" 360;
+  opacity:0; /* set live */
+  will-change:opacity, transform, font-variation-settings;
+}
+.tok.claim{ position:relative; }
+.tok.claim.supported{ color:var(--ink); }
+.tok .why{ font-family:var(--mono); font-size:0.5em; color:var(--ink-mid); vertical-align:super; margin-left:2px; opacity:0; transition:opacity .25s var(--ease); }
+.tok .why.lowconf{ color:var(--flag); }
+body.show-why .tok .why{ opacity:1; }
+.claim-strike{ position:relative; }
+
+.engine-side{
+  border-left:1px solid var(--hairline);
+  padding:clamp(18px,2.5vw,26px);
+  display:flex; flex-direction:column; gap:16px;
+}
+@media (max-width:760px){ .engine-side{ border-left:none; border-top:1px solid var(--hairline); } }
+
+/* source card — cited evidence index card */
+.source-card{
+  border:1px solid var(--hairline);
+  border-left:2px solid var(--verified);
+  background:var(--bg);
+  padding:13px 14px; border-radius:2px;
+  font-family:var(--mono); font-size:11px; line-height:1.5;
+  color:var(--ink-mid);
+  transform:translateX(16px); opacity:0;
+  transition:border-color .4s var(--ease);
+}
+.source-card.shown{ transform:none; opacity:1; }
+.source-card.pulled{ opacity:.25; border-left-color:var(--flag); }
+.source-card .sc-head{ display:flex; align-items:center; gap:7px; color:var(--verified); margin-bottom:6px; font-weight:500; letter-spacing:0.04em; }
+.source-card .vdot{ width:6px; height:6px; border-radius:50%; background:var(--verified); flex:none; }
+.source-card .sc-url{ color:var(--ink); }
+
+/* confidence meter */
+.meter{ margin-top:6px; }
+.meter-top{ display:flex; justify-content:space-between; align-items:baseline; font-family:var(--mono); font-size:11px; color:var(--ink-mid); margin-bottom:7px; }
+.meter-val{ color:var(--ink); font-weight:500; }
+.meter-track{ position:relative; height:3px; background:var(--hairline); border-radius:2px; overflow:visible; }
+.meter-fill{ position:absolute; left:0; top:0; bottom:0; width:0%; background:var(--verified); border-radius:2px; }
+.meter-cap{ position:absolute; top:-4px; bottom:-4px; width:1px; background:var(--ink-mid); opacity:.5; left:92%; }
+.meter-gap{ font-family:var(--mono); font-size:10px; color:var(--ink-mid); margin-top:6px; display:block; }
+
+/* engine controls */
+.engine-controls{
+  display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+  padding:14px clamp(20px,3vw,34px); border-top:1px solid var(--hairline);
+}
+.engine-invite{ font-family:var(--serif); font-style:italic; font-size:var(--step-0); color:var(--ink-mid); flex:1 1 240px; min-width:220px; }
+.btn-act{
+  font-family:var(--mono); font-size:var(--step--1); letter-spacing:0.03em;
+  padding:9px 14px; border:1px solid var(--ink); border-radius:2px;
+  background:var(--ink); color:var(--paper); cursor:pointer;
+  transition:opacity .2s var(--ease), background .25s var(--ease), color .25s var(--ease);
+  white-space:nowrap;
+}
+.btn-act:hover{ opacity:.85; }
+.btn-act[aria-pressed="true"]{ background:var(--flag); border-color:var(--flag); }
+.btn-why{
+  font-family:var(--mono); font-size:var(--step--1);
+  padding:9px 12px; border:1px solid var(--hairline); border-radius:2px;
+  background:transparent; color:var(--ink-mid); cursor:pointer;
+  transition:border-color .2s var(--ease), color .2s var(--ease);
+}
+.btn-why[aria-pressed="true"]{ color:var(--ink); border-color:var(--ink); }
+
+/* connector svg */
+.connector{ position:absolute; inset:0; width:100%; height:100%; pointer-events:none; overflow:visible; }
+.connector path{ fill:none; stroke:var(--verified); stroke-width:1; }
+
+/* ---------- 02 MANIFESTO ---------- */
+.manifesto{ display:flex; flex-direction:column; gap:clamp(10px,1.6vw,20px); }
+.principle{
+  font-family:var(--serif); font-size:var(--step-3); font-weight:360;
+  letter-spacing:-0.03em; line-height:1.02; color:var(--ink);
+  display:inline-block; width:max-content; max-width:100%;
+  position:relative; transition:color .3s var(--ease);
+}
+.principle em{ font-style:italic; color:var(--ink); }
+.principle .arrow{ font-family:var(--mono); font-size:0.34em; color:var(--ink-mid); vertical-align:middle; margin-left:14px; letter-spacing:0.05em; }
+.principle::after{ content:""; position:absolute; left:0; bottom:-2px; height:1px; width:0; background:var(--verified); transition:width .4s var(--ease); }
+.principle:hover{ color:var(--verified); }
+.principle:hover::after{ width:100%; }
+.principle:hover .arrow{ color:var(--verified); }
+.manifesto-support{ margin-top:clamp(22px,3vw,38px); max-width:62ch; font-size:var(--step-0); color:var(--ink); }
+.manifesto-support em{ font-family:var(--serif); }
+
+/* ---------- 03 EXHIBITS ---------- */
+.exhibits{ display:flex; flex-direction:column; gap:clamp(56px,8vw,104px); }
+.exhibit{ position:relative; }
+.ex-head{ display:flex; align-items:baseline; gap:16px; flex-wrap:wrap; margin-bottom:18px; }
+.ex-num{ font-family:var(--mono); font-size:var(--step--1); color:var(--ink-mid); }
+.ex-name{ font-family:var(--serif); font-size:var(--step-2); font-weight:480; letter-spacing:-0.03em; }
+.ex-name a{ border-bottom:1px solid transparent; transition:border-color .25s var(--ease); }
+.ex-name a:hover{ border-color:var(--verified); }
+
+/* status chip */
+.chip{
+  font-family:var(--mono); font-size:10px; letter-spacing:0.1em; text-transform:uppercase;
+  padding:4px 9px; border:1px solid var(--hairline); border-radius:2px;
+  color:var(--ink-mid); display:inline-flex; align-items:center; gap:6px; white-space:nowrap;
+}
+.chip .vdot{ width:6px; height:6px; border-radius:50%; flex:none; }
+.chip.live{ color:var(--verified); border-color:color-mix(in srgb, var(--verified) 50%, transparent); }
+.chip.live .vdot{ background:var(--verified); animation:pulse 2.4s var(--ease) infinite; }
+.chip.checking{ color:var(--ink-mid); }
+.chip.checking .vdot{ background:var(--ink-mid); animation:pulse 1.2s var(--ease) infinite; }
+.chip.unverified{ color:var(--ink-mid); }
+.chip.unverified .vdot{ background:var(--ink-mid); opacity:.5; }
+.chip.progress .vdot{ background:var(--ink-mid); opacity:.55; }
+@keyframes pulse{ 0%,100%{opacity:1;} 50%{opacity:.3;} }
+
+.pills{ display:flex; flex-wrap:wrap; gap:6px; margin-top:4px; }
+.pill{ font-family:var(--mono); font-size:10px; color:var(--ink-mid); padding:3px 8px; border:1px solid var(--hairline); border-radius:2px; }
+.ex-blurb{ max-width:58ch; font-size:var(--step-0); color:var(--ink); margin:14px 0 0; }
+
+/* code primitive */
+.code-card{
+  background:var(--bg-sunk); border:1px solid var(--hairline); border-radius:3px;
+  font-family:var(--mono); font-size:13px; line-height:1.7; color:var(--ink);
+  padding:18px 20px; overflow-x:auto;
+}
+.code-card .cmt{ color:var(--ink-mid); }
+.code-card .kw{ color:var(--verified); }
+.receipt-trigger{
+  cursor:pointer; border-bottom:1px dashed var(--verified); color:var(--verified);
+  font-weight:500;
+}
+.receipt{
+  display:grid; grid-template-rows:0fr; transition:grid-template-rows .5s var(--ease);
+}
+.receipt > div{ overflow:hidden; }
+.receipt.open{ grid-template-rows:1fr; }
+.receipt-inner{
+  margin-top:14px; padding:13px 14px; border:1px solid var(--hairline);
+  border-left:2px solid var(--verified); border-radius:2px; background:var(--bg);
+  font-family:var(--mono); font-size:12px; line-height:1.6; color:var(--ink-mid);
+}
+.receipt-inner code{ color:var(--ink); }
+
+/* ClaimSaathi */
+.cs-grid{ display:grid; grid-template-columns:1fr 1fr; gap:clamp(20px,3vw,40px); align-items:start; }
+@media (max-width:760px){ .cs-grid{ grid-template-columns:1fr; } }
+.cs-finewall{ position:relative; border:1px solid var(--hairline); border-radius:3px; background:var(--bg-sunk); padding:18px; max-height:340px; overflow:hidden; }
+.cs-finewall .fineline{ font-family:var(--sans); font-size:11px; line-height:1.9; color:var(--ink-mid); filter:blur(2.4px); opacity:.55; user-select:none; transition:filter .6s var(--ease), opacity .6s var(--ease), transform .6s var(--ease); }
+.cs-finewall .fineline.lifted{ filter:none; opacity:1; transform:scale(1.06); transform-origin:left center; color:var(--ink); position:relative; z-index:2; }
+.cs-finewall .fineline.lifted::after{ content:""; position:absolute; left:0; bottom:-3px; height:1px; background:var(--verified); width:0; animation:drawline .7s .2s var(--ease) forwards; }
+@keyframes drawline{ to{ width:100%; } }
+.cs-finewall::after{ content:""; position:absolute; inset:0; pointer-events:none; background:linear-gradient(to bottom, transparent 60%, var(--bg-sunk)); }
+
+.cs-stage{ display:flex; flex-direction:column; gap:18px; }
+.cs-question{
+  font-family:var(--mono); font-size:13px; color:var(--ink);
+  padding:11px 13px; border:1px solid var(--hairline); border-radius:2px; background:var(--bg-sunk);
+}
+.cs-question .you{ color:var(--ink-mid); }
+.cs-answer{ border-left:2px solid var(--verified); padding:6px 0 6px 16px; }
+.cs-answer .stamp{ font-family:var(--mono); font-size:10px; letter-spacing:0.08em; color:var(--verified); display:block; margin-bottom:6px; }
+.cs-answer .quoted{ font-family:var(--serif); font-style:italic; font-size:var(--step-1); line-height:1.3; color:var(--ink); }
+.cs-answer .conf-label{ font-family:var(--mono); font-size:10px; color:var(--ink-mid); margin-top:8px; display:block; }
+.cs-refusal{ border-left:2px solid var(--ink-mid); padding:6px 0 6px 16px; }
+.cs-refusal .stamp{ font-family:var(--mono); font-size:10px; letter-spacing:0.08em; color:var(--ink-mid); display:block; margin-bottom:6px; }
+.cs-refusal .r-text{ font-family:var(--serif); font-style:italic; font-size:var(--step-1); color:var(--ink-mid); }
+.cs-bilingual{ display:flex; gap:18px; flex-wrap:wrap; font-size:12px; border-top:1px solid var(--hairline); padding-top:14px; }
+.cs-bilingual .bl{ flex:1 1 200px; }
+.cs-bilingual .bl .lab{ font-family:var(--mono); font-size:10px; color:var(--ink-mid); letter-spacing:0.06em; display:block; margin-bottom:4px; }
+.cs-bilingual .bl .txt{ font-family:var(--serif); font-style:italic; color:var(--ink); }
+
+/* ReTeach gradebook */
+.rt-book{ border:1px solid var(--hairline); border-radius:3px; overflow:hidden; }
+.rt-row{ display:grid; grid-template-columns:1.4fr 1fr auto; gap:14px; align-items:center; padding:13px 16px; border-bottom:1px solid var(--hairline); font-family:var(--mono); font-size:13px; }
+.rt-row:last-child{ border-bottom:none; }
+.rt-row .stu{ color:var(--ink); }
+.rt-row .ans{ color:var(--ink-mid); }
+.rt-flag{ color:var(--flag); display:inline-flex; align-items:center; gap:7px; }
+.rt-confirm{ font-family:var(--mono); font-size:11px; padding:6px 11px; border:1px solid var(--flag); color:var(--flag); border-radius:2px; background:transparent; cursor:pointer; transition:all .25s var(--ease); }
+.rt-confirm:hover{ background:var(--flag); color:var(--paper); }
+.rt-confirm.done{ border-color:var(--verified); color:var(--verified); }
+.rt-confirm.done:hover{ background:transparent; }
+.rt-draft{ display:grid; grid-template-rows:0fr; transition:grid-template-rows .55s var(--ease); }
+.rt-draft > div{ overflow:hidden; }
+.rt-draft.open{ grid-template-rows:1fr; }
+.rt-draft-inner{ padding:16px; background:var(--bg-sunk); border-top:1px solid var(--hairline); font-family:var(--sans); font-size:14px; color:var(--ink); }
+.rt-draft-inner .lab{ font-family:var(--mono); font-size:10px; letter-spacing:0.08em; color:var(--verified); display:block; margin-bottom:8px; }
+
+/* BoozyDEx record */
+.bx-record{ border:1px solid var(--hairline); border-radius:3px; background:var(--bg-sunk); padding:20px 22px; max-width:440px; }
+.bx-record .rec-title{ font-family:var(--serif); font-size:var(--step-1); margin-bottom:14px; }
+.bx-field{ display:grid; grid-template-columns:120px 1fr; gap:12px; padding:9px 0; border-bottom:1px solid var(--baseline); font-family:var(--mono); font-size:13px; }
+.bx-field:last-child{ border-bottom:none; }
+.bx-field .k{ color:var(--ink-mid); text-transform:uppercase; letter-spacing:0.06em; font-size:11px; }
+.bx-field .v{ color:var(--ink); }
+.bx-field .v .cursorblink{ display:inline-block; width:7px; height:1em; background:var(--verified); vertical-align:-2px; animation:blink 1s step-end infinite; }
+@keyframes blink{ 50%{opacity:0;} }
+
+/* ---------- 04 HOW I WORK ---------- */
+.work-prose{ max-width:62ch; font-size:var(--step-1); line-height:1.55; }
+.work-prose p{ margin:0 0 1em; }
+.stat-line{
+  margin-top:clamp(28px,4vw,46px);
+  display:flex; gap:18px; align-items:flex-start; flex-wrap:wrap;
+  padding-top:clamp(22px,3vw,34px); border-top:1px solid var(--hairline);
+}
+.stat-line .stat-sentence{ font-family:var(--serif); font-style:italic; font-size:var(--step-1); line-height:1.35; color:var(--ink); flex:1 1 320px; max-width:48ch; }
+.stat-chip{
+  font-family:var(--mono); font-size:10px; letter-spacing:0.06em; line-height:1.5;
+  padding:8px 11px; border:1px solid var(--hairline); border-left:2px solid var(--flag);
+  border-radius:2px; color:var(--ink-mid); align-self:flex-start; white-space:nowrap;
+}
+.stat-chip.verified{ border-left-color:var(--verified); color:var(--verified); }
+
+/* ---------- 05 BUILD WITH ME ---------- */
+.build-lead{ font-size:var(--step-1); line-height:1.5; max-width:48ch; color:var(--ink); }
+.build-steps{ list-style:none; margin:clamp(24px,3vw,40px) 0; padding:0; }
+.build-steps li{ display:grid; grid-template-columns:auto 1fr; gap:16px; align-items:baseline; padding:16px 0; border-top:1px solid var(--hairline); }
+.build-steps li:last-child{ border-bottom:1px solid var(--hairline); }
+.build-steps .bs-n{ font-family:var(--mono); font-size:var(--step--1); color:var(--verified); letter-spacing:0.04em; }
+.build-steps .bs-t{ font-family:var(--serif); font-size:var(--step-1); line-height:1.35; color:var(--ink); }
+.build-cta{ margin-top:clamp(20px,2.5vw,30px); }
+.build-side{ background:var(--bg-sunk); border:1px solid var(--hairline); border-radius:3px; padding:clamp(20px,2.5vw,28px); align-self:start; }
+.build-list{ list-style:none; margin:0; padding:0; }
+.build-list li{ font-family:var(--serif); font-size:var(--step-1); color:var(--ink); padding:11px 0; border-bottom:1px solid var(--baseline); }
+.build-list li:last-child{ border-bottom:none; }
+.build-guide-note{ margin-top:18px; font-size:11px; color:var(--ink-mid); line-height:1.6; padding-top:14px; border-top:1px solid var(--hairline); }
+
+/* ---------- 06 COLOPHON ---------- */
+.spine{ display:flex; flex-direction:column; gap:0; margin-bottom:clamp(36px,5vw,56px); }
+.spine-row{ display:grid; grid-template-columns:auto 1fr auto; gap:16px; align-items:baseline; padding:16px 0; border-bottom:1px solid var(--hairline); }
+.spine-row .yr{ font-family:var(--mono); font-size:12px; color:var(--ink-mid); }
+.spine-row .what{ font-family:var(--serif); font-size:var(--step-1); }
+.colophon-grid{ display:grid; grid-template-columns:1fr 1fr; gap:clamp(24px,4vw,56px); align-items:start; }
+@media (max-width:680px){ .colophon-grid{ grid-template-columns:1fr; } }
+.contact-block .label{ display:block; }
+.email-copy{
+  font-family:var(--serif); font-size:var(--step-2); font-weight:460; letter-spacing:-0.02em;
+  cursor:pointer; background:none; border:none; color:var(--ink); padding:0; text-align:left;
+  display:inline-flex; align-items:center; gap:12px;
+}
+.email-copy .tick{ width:18px; height:18px; opacity:0; transform:scale(.6); transition:opacity .3s var(--ease), transform .3s var(--ease); color:var(--verified); }
+.email-copy.copied .tick{ opacity:1; transform:scale(1); }
+.contact-meta{ display:flex; flex-direction:column; gap:6px; margin-top:14px; }
+.contact-meta a:hover{ color:var(--verified); }
+.colophon-credit{ font-family:var(--mono); font-size:11px; color:var(--ink-mid); line-height:1.7; }
+.colophon-credit em{ font-family:var(--serif); font-style:italic; }
+
+/* ---------- velocity marquee ---------- */
+.marquee{ overflow:hidden; border-top:1px solid var(--hairline); border-bottom:1px solid var(--hairline); padding:14px 0; white-space:nowrap; }
+.marquee-track{ display:inline-flex; gap:0; will-change:transform; }
+.marquee-track span{ font-family:var(--mono); font-size:13px; color:var(--ink-mid); letter-spacing:0.04em; padding:0 26px; position:relative; }
+.marquee-track span::after{ content:"·"; position:absolute; right:-3px; color:var(--hairline); }
+
+/* ---------- footer ---------- */
+footer{ padding:clamp(56px,8vw,104px) 0 clamp(40px,6vw,72px); }
+.signoff{ display:flex; flex-direction:column; gap:clamp(18px,2.5vw,30px); max-width:72ch; }
+.signoff p{ margin:0; font-size:var(--step-0); }
+.signoff .so-disc{ font-family:var(--sans); color:var(--ink-mid); padding-left:18px; border-left:1px solid var(--hairline); }
+.closer{
+  font-family:var(--serif); font-size:var(--step-2); font-weight:380; letter-spacing:-0.03em;
+  line-height:1.2; color:var(--ink); margin-top:clamp(10px,2vw,22px);
+}
+.redact{
+  display:inline-block; background:var(--ink-mid); color:transparent; border-radius:2px;
+  letter-spacing:-0.05em; user-select:none; vertical-align:baseline; opacity:.55;
+}
+.foot-meter{ margin-top:22px; max-width:380px; }
+.foot-meter .meter-fill{ background:var(--ink-mid); }
+
+/* ============================================================
+   CUSTOM CURSOR
+   ============================================================ */
+.cursor-ring{
+  position:fixed; top:0; left:0; z-index:9999; pointer-events:none;
+  width:26px; height:26px; border:1px solid var(--ink); border-radius:50%;
+  transform:translate(-50%,-50%); mix-blend-mode:difference;
+  transition:width .22s var(--ease), height .22s var(--ease), background .22s var(--ease);
+  display:none;
+}
+.cursor-label{
+  position:fixed; top:0; left:0; z-index:9999; pointer-events:none;
+  font-family:var(--mono); font-size:9px; letter-spacing:0.08em; text-transform:uppercase;
+  color:var(--paper); background:var(--ink); padding:3px 6px; border-radius:2px;
+  transform:translate(14px,8px); opacity:0; transition:opacity .18s var(--ease);
+  white-space:nowrap; mix-blend-mode:difference;
+  display:none;
+}
+@media (hover:hover) and (pointer:fine){
+  body.cursor-on .cursor-ring{ display:block; }
+  body.cursor-on .cursor-label{ display:block; }
+  body.cursor-on{ cursor:none; }
+  body.cursor-on a, body.cursor-on button, body.cursor-on [tabindex]{ cursor:none; }
+}
+.cursor-ring.grow{ width:54px; height:54px; background:color-mix(in srgb, var(--ink) 8%, transparent); }
+
+/* reveal default state (JS-driven elements start hidden only when JS+motion on) */
+.reveal{ }
+body.motion-on .reveal{ opacity:0; }
+
+/* ============================================================
+   REDUCED MOTION — CSS half of the kill switch
+   ============================================================ */
+@media (prefers-reduced-motion: reduce){
+  *{ animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; scroll-behavior:auto !important; }
+  .grain{ opacity:.015; }
+  .chip .vdot, .chip.live .vdot, .chip.checking .vdot{ animation:none !important; }
+  .cs-finewall .fineline.lifted::after{ animation:none !important; width:100%; }
+  .bx-field .v .cursorblink{ animation:none !important; }
+  body.motion-on .reveal{ opacity:1 !important; }
+}
+</style>
 </head>
 <body>
-  <a class="skip" href="#work">Skip to content</a>
 
-  <header class="site-header">
-    <nav class="nav">
-      <a class="brand" href="#top" aria-label="Shaquille Gurung — home">
-        <img src="/favicon.svg" alt="" width="28" height="28" />
-        <span>Shaquille Gurung</span>
-      </a>
-      <div class="nav-links">
-        <a href="#work">Work</a>
-        <a href="#about">About</a>
-        <a href="#contact" class="nav-cta">Contact</a>
-      </div>
-    </nav>
+<!-- splash / no-JS fallback shown while the bundle unpacks -->
+
+
+<!-- paper grain (the ONLY texture) -->
+<svg class="grain" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+  <filter id="paperGrain"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"></feTurbulence></filter>
+  <rect width="100%" height="100%" filter="url(#paperGrain)"></rect>
+</svg>
+
+<!-- custom cursor -->
+<div class="cursor-ring" aria-hidden="true"></div>
+<div class="cursor-label" aria-hidden="true"></div>
+
+<!-- LEFT MARGIN INDEX -->
+<div class="margin-index" role="complementary" aria-label="Section index and instrument chrome">
+  <a class="mi-mark" href="#top" aria-label="Top — Shaquille Gurung">Sg</a>
+  <nav class="mi-nav" aria-label="Section index">
+    <a href="#s01" data-idx="01">01</a>
+    <a href="#s02" data-idx="02">02</a>
+    <a href="#s03" data-idx="03">03</a>
+    <a href="#s04" data-idx="04">04</a>
+    <a href="#s05" data-idx="05">05</a>
+    <a href="#s06" data-idx="06">06</a>
+  </nav>
+  <div class="mi-foot">
+    <span class="mi-clock" id="clock" aria-label="Local time" role="timer">--:--:--</span>
+    <a href="https://github.com/kmaalayo" target="_blank" rel="noopener" data-cursor="live">GH</a>
+    <a href="#s06" data-cursor="read">✉</a>
+  </div>
+</div>
+
+<div class="page" id="top">
+<div class="shell">
+
+  <!-- MASTHEAD -->
+  <header class="masthead">
+    <div>
+      <a href="#top" class="wordmark">Shaquille Gurung</a>
+      <span class="kicker">builder of AI you can actually trust</span>
+    </div>
+    <div class="mast-right">
+      <a href="https://github.com/kmaalayo" target="_blank" rel="noopener" class="btn-ghost" data-cursor="live">GitHub ↗</a>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" aria-pressed="false">
+        <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="4.2"></circle><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.4 1.4M17.6 17.6L19 19M19 5l-1.4 1.4M6.4 17.6L5 19"></path></svg>
+      </button>
+      <button class="btn-ghost" id="contactBtn" data-cursor="read">Contact</button>
+    </div>
   </header>
 
-  <main id="top">
+  <main>
 
-    <!-- HERO -->
-    <section class="hero">
-      <div class="container">
-        <p class="eyebrow">Founder &amp; builder</p>
-        <h1 class="hero-title">
-          I build AI products people can <span class="grad">actually trust</span>.
-        </h1>
-        <!-- EDIT: make this intro yours — it's written to be honest and editable. -->
-        <p class="hero-sub">
-          I'm Shaquille Gurung. I design and ship full products end to end — the kind of
-          software that earns trust in the moments that matter, from a school's busiest
-          morning to a family's hardest day.
-        </p>
-        <div class="hero-actions">
-          <a class="btn btn-primary" href="#work">See my work</a>
-          <a class="btn btn-ghost" href="#contact">Get in touch</a>
-        </div>
+  <!-- ============ 01 — THE HONEST ENGINE ============ -->
+  <section id="s01" class="hero" aria-labelledby="s01-h">
+    <h1 class="hero-thesis" id="s01-h" aria-label="I build AI that tells you when it doesn't know.">
+      <!-- glyph spans injected by JS; this text is the accessible label -->
+    </h1>
+    <p class="kicker hero-cue" data-cursor="read">move your cursor — the type responds.</p>
+
+    <div class="engine reveal" id="engine" data-reveal="rise">
+      <div class="engine-bar">
+        <span class="dot"></span>
+        <span class="engine-q"><span class="you">parent ›</span> Can a parent see another school's attendance?</span>
       </div>
-    </section>
-
-    <!-- WORK -->
-    <section id="work" class="section">
-      <div class="container">
-        <p class="eyebrow">Selected work</p>
-        <h2 class="section-title">Things I'm building</h2>
-
-        <div class="cards">
-          <article class="card">
-            <div class="card-top">
-              <h3>NoxNocTech</h3>
-              <span class="badge badge-live">Live</span>
-            </div>
-            <p class="card-body">
-              School management, reimagined. A multi-tenant SaaS that runs a school's whole
-              day — attendance, fees, messaging, emergency alerts — from one role-aware console,
-              with hard tenant isolation enforced by the database itself.
-            </p>
-            <div class="card-foot">
-              <span class="tags">SaaS · Multi-tenant · PWA</span>
-              <a class="card-link" href="https://noxnoctech.com" target="_blank" rel="noopener">Visit ↗</a>
-            </div>
-          </article>
-
-          <article class="card">
-            <div class="card-top">
-              <h3>ClaimSaathi</h3>
-              <span class="badge">Coming soon</span>
-            </div>
-            <p class="card-body">
-              Your claim, done right. AI that reads your insurance policy in the moment of
-              crisis and tells you exactly how to claim — every answer quoted from your actual
-              policy, never guessed.
-            </p>
-            <div class="card-foot">
-              <span class="tags">AI · Insurance · India</span>
-              <span class="card-soon">In progress</span>
-            </div>
-          </article>
-
-          <article class="card">
-            <div class="card-top">
-              <h3>ReTeach</h3>
-              <span class="badge">Coming soon</span>
-            </div>
-            <p class="card-body">
-              Grade, then re-teach. Trust-first AI grading that admits what it can't read,
-              keeps a human in the loop, then coaches the next lesson.
-            </p>
-            <div class="card-foot">
-              <span class="tags">AI · Education</span>
-              <span class="card-soon">In progress</span>
-            </div>
-          </article>
-
-          <article class="card">
-            <div class="card-top">
-              <h3>BoozyDEx</h3>
-              <span class="badge">Coming soon</span>
-            </div>
-            <p class="card-body">
-              <!-- EDIT: refine this blurb to your liking. -->
-              A spirits data project — structured, searchable knowledge about what's in the bottle.
-            </p>
-            <div class="card-foot">
-              <span class="tags">Data</span>
-              <span class="card-soon">In progress</span>
-            </div>
-          </article>
+      <div class="engine-body">
+        <div class="engine-answer baseline-rule" id="answerRegion" aria-live="polite" aria-label="Engine answer">
+          <svg class="connector" id="connector" aria-hidden="true"><path id="connPath" d=""></path></svg>
+          <span id="answerText"></span>
         </div>
-      </div>
-    </section>
-
-    <!-- ABOUT -->
-    <section id="about" class="section section-alt">
-      <div class="container about">
-        <div>
-          <p class="eyebrow">About</p>
-          <h2 class="section-title">A builder who sweats the details</h2>
-          <!-- EDIT: personalize freely. -->
-          <p class="about-text">
-            I care about the unglamorous parts — the edge cases, the honest copy, the moment
-            a product has to work when someone's stressed and out of patience. My north star
-            across everything I build is the same: be genuinely useful, and never pretend to
-            know something I don't.
-          </p>
-          <p class="about-text">
-            Right now I'm focused on AI products for real-world Indian problems — and on making
-            them feel calm, clear, and trustworthy.
-          </p>
-        </div>
-        <aside class="about-side">
-          <h4>Currently</h4>
-          <ul class="dot-list">
-            <li>Building <strong>NoxNocTech</strong></li>
-            <li>Shipping <strong>ClaimSaathi</strong> &amp; <strong>ReTeach</strong></li>
-            <li>Learning in public</li>
-          </ul>
+        <aside class="engine-side" aria-label="Provenance">
+          <div class="source-card" id="sourceCard">
+            <span class="sc-head"><span class="vdot"></span><span id="scStatus">VERIFIED</span></span>
+            <span class="sc-line" id="scLine"></span>
+          </div>
+          <div class="meter" aria-label="Aggregate confidence">
+            <div class="meter-top"><span>aggregate confidence</span><span class="meter-val" id="meterVal">—</span></div>
+            <div class="meter-track"><div class="meter-fill" id="meterFill"></div><div class="meter-cap"></div></div>
+            <span class="meter-gap" id="meterGap">cap 92% — it never claims certainty.</span>
+          </div>
         </aside>
       </div>
-    </section>
+      <div class="engine-controls">
+        <p class="engine-invite">Take away the evidence and watch it get more honest, not more confident.</p>
+        <button class="btn-act" id="removeSourceBtn" aria-pressed="false" data-cursor="show">remove the source</button>
+        <button class="btn-why" id="whyBtn" aria-pressed="false" data-cursor="show">/Why?</button>
+      </div>
+    </div>
+  </section>
 
-    <!-- CONTACT -->
-    <section id="contact" class="section">
-      <div class="container contact">
-        <p class="eyebrow">Contact</p>
-        <h2 class="section-title">Let's talk</h2>
-        <p class="contact-sub">
-          Working on something interesting, or just want to say hi? I'd love to hear from you.
-        </p>
-        <div class="contact-actions">
-          <!-- EDIT: set this to your real address (or a domain address once email is set up). -->
-          <a class="btn btn-primary" href="mailto:hello@shaquillegurung.com">hello@shaquillegurung.com</a>
-          <a class="btn btn-ghost" href="https://github.com/kmaalayo" target="_blank" rel="noopener">GitHub ↗</a>
+  <!-- ============ 02 — THE THESIS ============ -->
+  <section id="s02" aria-labelledby="s02-h">
+    <div class="sec-head"><span class="sec-num">02 / thesis</span><h2 class="sec-title" id="s02-h">Three behaviors, not buzzwords.</h2></div>
+    <div class="manifesto">
+      <a class="principle reveal" data-reveal="wipe" href="#ex-claimsaathi">It quotes its sources.<span class="arrow">→ ClaimSaathi</span></a>
+      <a class="principle reveal" data-reveal="wipe" href="#ex-reteach"><em>It admits what it can't read.</em><span class="arrow">→ ReTeach</span></a>
+      <a class="principle reveal" data-reveal="wipe" href="#ex-noxnoctech">A human stays in control.<span class="arrow">→ NoxNocTech / ReTeach</span></a>
+    </div>
+    <p class="manifesto-support reveal" data-reveal="rise"><em>Calm, honest software for real-world problems — most of them in India. I obsess over edge cases, honest copy, and the moment the software has to work for someone stressed and out of patience.</em></p>
+  </section>
+
+  <!-- ============ 03 — WORK / EXHIBITS ============ -->
+  <section id="s03" aria-labelledby="s03-h">
+    <div class="sec-head"><span class="sec-num">03 / work</span><h2 class="sec-title" id="s03-h">The proof. Each shows its honest primitive.</h2></div>
+
+    <div class="exhibits">
+
+      <!-- 01 NoxNocTech -->
+      <article class="exhibit reveal" id="ex-noxnoctech" data-reveal="rise">
+        <div class="ex-head">
+          <span class="ex-num">01</span>
+          <span class="ex-name"><a href="https://noxnoctech.com" target="_blank" rel="noopener" data-cursor="live">NoxNocTech ↗</a></span>
+          <span class="chip checking" id="noxChip"><span class="vdot"></span><span id="noxChipText">checking…</span></span>
+        </div>
+        <div class="pills"><span class="pill">SaaS</span><span class="pill">multi-tenant</span><span class="pill">real-time</span><span class="pill">PWA</span></div>
+        <p class="ex-blurb">Multi-tenant school console — attendance, fees, messaging, assignments, emergency alerts. <span class="receipt-trigger" id="rlsTrigger" role="button" tabindex="0" aria-expanded="false" aria-controls="rlsReceipt" data-cursor="show">Tenant isolation</span> enforced by the database itself, not the app code.</p>
+        <div class="receipt" id="rlsReceipt">
+          <div><div class="receipt-inner">
+            <span class="kicker" style="color:var(--verified);margin-bottom:6px;display:block;">VERIFIED · codebase</span>
+            Postgres <code>FORCE ROW LEVEL SECURITY</code> on every tenant table, scoped per request with <code>SET LOCAL app.current_school_id</code>. A query for one school physically cannot return another's rows — enforced below the application, in the engine.
+          </div></div>
+        </div>
+        <div class="code-card reveal" data-reveal="rise" style="margin-top:18px;max-width:680px;" aria-label="Tenant isolation SQL">
+<span class="cmt">-- every tenant table, no exceptions</span>
+<span class="kw">ALTER TABLE</span> attendance <span class="kw">ENABLE ROW LEVEL SECURITY</span>;
+<span class="kw">ALTER TABLE</span> attendance <span class="kw">FORCE ROW LEVEL SECURITY</span>;
+
+<span class="kw">CREATE POLICY</span> tenant_isolation <span class="kw">ON</span> attendance
+  <span class="kw">USING</span> (school_id = current_setting('app.current_school_id')::uuid);
+
+<span class="cmt">-- scoped per request, before any query runs</span>
+<span class="kw">SET LOCAL</span> app.current_school_id = '…';
+        </div>
+      </article>
+
+      <!-- 02 ClaimSaathi -->
+      <article class="exhibit reveal" id="ex-claimsaathi" data-reveal="rise">
+        <div class="ex-head">
+          <span class="ex-num">02</span>
+          <span class="ex-name">ClaimSaathi</span>
+          <span class="chip progress"><span class="vdot"></span>IN PROGRESS</span>
+        </div>
+        <div class="pills"><span class="pill">AI</span><span class="pill">insurance</span><span class="pill">trust-first</span></div>
+        <p class="ex-blurb">Reads your insurance policy in the moment of crisis and tells you exactly how to claim — every answer quoted verbatim from your actual policy, never guessed. English and Hindi. For India.</p>
+
+        <div class="cs-grid reveal" data-reveal="rise" style="margin-top:22px;">
+          <div class="cs-stage">
+            <div class="cs-question"><span class="you">you ›</span> <span id="csQ1"></span></div>
+            <div class="cs-answer" id="csAnswer">
+              <span class="stamp">QUOTED VERBATIM · CLAUSE 7.2</span>
+              <span class="quoted">"Room rent is capped at 1% of the sum insured per day; charges above this limit are deducted proportionately across the claim."</span>
+              <span class="conf-label">Confidence: HIGH — exact match</span>
+            </div>
+            <div class="cs-question" style="margin-top:8px;"><span class="you">you ›</span> Does it cover a cracked phone screen?</div>
+            <div class="cs-refusal" id="csRefusal">
+              <span class="stamp">NO MATCH IN POLICY</span>
+              <span class="r-text">Not stated in your policy.</span>
+            </div>
+            <div class="cs-bilingual">
+              <div class="bl"><span class="lab">EN · clause 7.2</span><span class="txt">"…deducted proportionately across the claim."</span></div>
+              <div class="bl"><span class="lab">हिं · खंड 7.2</span><span class="txt">"…पूरे क्लेम पर आनुपातिक रूप से काटा जाएगा।"</span></div>
+            </div>
+          </div>
+          <div class="cs-finewall" id="csWall" aria-hidden="true"></div>
+        </div>
+      </article>
+
+      <!-- 03 ReTeach -->
+      <article class="exhibit reveal" id="ex-reteach" data-reveal="rise">
+        <div class="ex-head">
+          <span class="ex-num">03</span>
+          <span class="ex-name">ReTeach</span>
+          <span class="chip progress"><span class="vdot"></span>IN PROGRESS</span>
+        </div>
+        <div class="pills"><span class="pill">AI</span><span class="pill">education</span></div>
+        <p class="ex-blurb">Trust-first AI grading and a re-teaching coach: it admits what it can't read, keeps a human in the loop, then coaches the next lesson.</p>
+        <div class="rt-book reveal" data-reveal="rise" style="margin-top:22px;max-width:640px;" aria-label="Gradebook fragment">
+          <div class="rt-row"><span class="stu">Aarav K.</span><span class="ans">3/4 correct</span><span class="mono" style="color:var(--verified);font-size:11px;">auto-graded</span></div>
+          <div class="rt-row"><span class="stu">Meera S.</span><span class="ans">4/4 correct</span><span class="mono" style="color:var(--verified);font-size:11px;">auto-graded</span></div>
+          <div class="rt-row">
+            <span class="stu">Dev P.</span>
+            <span class="ans rt-flag"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 9v4M12 17h.01"></path><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"></path></svg>[illegible] — needs human review</span>
+            <button class="rt-confirm" id="rtConfirm" aria-controls="rtDraft" aria-expanded="false" data-cursor="show">I'll read it</button>
+          </div>
+        </div>
+        <div class="rt-draft" id="rtDraft">
+          <div><div class="rt-draft-inner">
+            <span class="lab">HUMAN CONFIRMED · DRAFTING NEXT LESSON</span>
+            Dev mixed up area and perimeter on Q3. Drafted a 6-minute re-teach: one worked example, one for him to try, one exit-ticket check. You approve before it goes out.
+          </div></div>
+        </div>
+      </article>
+
+      <!-- 04 BoozyDEx -->
+      <article class="exhibit reveal" id="ex-boozydex" data-reveal="rise">
+        <div class="ex-head">
+          <span class="ex-num">04</span>
+          <span class="ex-name">BoozyDEx</span>
+          <span class="chip progress"><span class="vdot"></span>IN PROGRESS</span>
+        </div>
+        <div class="pills"><span class="pill">data</span></div>
+        <p class="ex-blurb">Structured, searchable knowledge about what's actually in the bottle.</p>
+        <div class="bx-record reveal" id="bxRecord" data-reveal="rise" style="margin-top:22px;" aria-label="Structured bottle record">
+          <div class="rec-title">Lagavulin 16</div>
+          <div class="bx-field"><span class="k">category</span><span class="v" data-val="Single Malt Scotch"></span></div>
+          <div class="bx-field"><span class="k">abv</span><span class="v" data-val="43% ABV"></span></div>
+          <div class="bx-field"><span class="k">region</span><span class="v" data-val="Islay, Scotland"></span></div>
+          <div class="bx-field"><span class="k">mashbill</span><span class="v" data-val="100% malted barley"></span></div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ============ 04 — HOW I WORK ============ -->
+  <section id="s04" aria-labelledby="s04-h">
+    <div class="sec-head"><span class="sec-num">04 / obsession</span><h2 class="sec-title" id="s04-h">How I work.</h2></div>
+    <div class="work-prose reveal" data-reveal="rise">
+      <p>I build for the worst moment, not the demo. The parent who can't open the app because their kid is sick and the fees are due today. The policyholder reading fine print at 2am after a flood. If the software fails them, calm and honest copy is the difference between trust and panic.</p>
+      <p>So I obsess over edge cases and over the words on the screen. Silence beats a confident wrong answer. When the system isn't sure, it says so — plainly — instead of guessing well enough to be believed and wrong enough to hurt.</p>
+    </div>
+    <div class="stat-line reveal" data-reveal="rise">
+      <p class="stat-sentence" id="statSentence">In India, claims are rarely rejected outright — they're quietly shrunk by sub-limits and deductions you never read. The exact figure is one I won't quote until I've sourced it.</p>
+      <span class="stat-chip" id="statChip">STAT WITHHELD · UNVERIFIED · source pending (IRDAI Annual Report)</span>
+    </div>
+  </section>
+
+  <!-- ============ 05 — BUILD WITH ME ============ -->
+  <section id="s05" aria-labelledby="s05-h">
+    <div class="sec-head"><span class="sec-num">05 / build with me</span><h2 class="sec-title" id="s05-h">Need something built?</h2></div>
+    <div class="split">
+      <div>
+        <p class="build-lead reveal" data-reveal="rise">I take on a few custom builds at a time — web &amp; mobile apps, AI-powered tools, internal systems, and the occasional rescue of a project that's gone sideways. Same standard as my own products: honest, calm, and built for the worst moment, not the demo.</p>
+        <ol class="build-steps reveal" data-reveal="rise">
+          <li><span class="bs-n">01</span><span class="bs-t">Tell me what you need — in plain words. No spec required.</span></li>
+          <li><span class="bs-n">02</span><span class="bs-t">I scope it honestly — including the parts I'd talk you out of.</span></li>
+          <li><span class="bs-n">03</span><span class="bs-t">We build, and you watch it work before you have to trust it.</span></li>
+        </ol>
+        <button class="btn-act build-cta reveal" data-reveal="rise" id="startProjectBtn" data-cursor="read">Start a project →</button>
+      </div>
+      <aside class="build-side reveal" data-reveal="rise" aria-label="What I build">
+        <span class="kicker" style="display:block;margin-bottom:12px;">what I build</span>
+        <ul class="build-list">
+          <li>Web &amp; mobile apps</li>
+          <li>AI tools — the trustworthy kind</li>
+          <li>Internal systems &amp; dashboards</li>
+          <li>Rescues &amp; rebuilds</li>
+        </ul>
+        <!-- FUTURE: the guide / 3D avatar will live here to onboard visitors. -->
+        <p class="build-guide-note mono">A guided intake is on the way — one day, my own guide will walk you through it.</p>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ============ 06 — COLOPHON / LIVING RESUME ============ -->
+  <section id="s06" aria-labelledby="s06-h">
+    <div class="sec-head"><span class="sec-num">06 / colophon</span><h2 class="sec-title" id="s06-h">What I've shipped, and when.</h2></div>
+    <div class="spine reveal" data-reveal="rise">
+      <div class="spine-row"><span class="yr mono">now · live</span><span class="what">NoxNocTech</span><span class="chip live"><span class="vdot"></span>SHIPPED</span></div>
+      <div class="spine-row"><span class="yr mono">now</span><span class="what">ClaimSaathi</span><span class="chip progress"><span class="vdot"></span>IN PROGRESS</span></div>
+      <div class="spine-row"><span class="yr mono">now</span><span class="what">ReTeach</span><span class="chip progress"><span class="vdot"></span>IN PROGRESS</span></div>
+      <div class="spine-row"><span class="yr mono">now</span><span class="what">BoozyDEx</span><span class="chip progress"><span class="vdot"></span>IN PROGRESS</span></div>
+    </div>
+    <p class="kicker" style="margin-bottom:clamp(36px,5vw,56px);">Early in my career. Shipping real, serious products.</p>
+
+    <div class="colophon-grid">
+      <div class="contact-block reveal" data-reveal="rise">
+        <span class="kicker label">the address I'm setting up</span>
+        <button class="email-copy" id="emailCopy" data-cursor="copy" aria-label="Copy email hello@shaquillegurung.com">
+          hello@shaquillegurung.com
+          <svg class="tick" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 13l4 4L19 7"></path></svg>
+        </button>
+        <span class="mono" id="copyStatus" aria-live="polite" style="font-size:11px;color:var(--verified);display:block;height:14px;margin-top:6px;"></span>
+        <div class="contact-meta">
+          <a href="https://github.com/kmaalayo" target="_blank" rel="noopener" class="mono" style="font-size:12px;color:var(--ink-mid);" data-cursor="live">github.com/kmaalayo ↗</a>
+          <a href="https://shaquillegurung.com" class="mono" style="font-size:12px;color:var(--ink-mid);">shaquillegurung.com</a>
         </div>
       </div>
-    </section>
+      <div class="reveal" data-reveal="rise">
+        <p class="colophon-credit">Set in <em>Fraunces</em>, <em>Hanken Grotesque</em> &amp; <em>Geist Mono</em>. Built as a single hand-written HTML file. The reasoning engine you played with runs entirely on-device, on hand-authored data — no model, no network call.</p>
+      </div>
+    </div>
+  </section>
 
   </main>
+</div>
 
-  <footer class="site-footer">
-    <div class="container footer-row">
-      <span>© <span id="year">2026</span> Shaquille Gurung</span>
-      <span class="status" id="status" aria-live="polite">
-        <span class="dot"></span><span class="status-text">checking backend…</span>
-      </span>
-      <span class="built">Node · Express</span>
+<!-- velocity marquee -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track" id="marqueeTrack"></div>
+</div>
+
+<!-- FOOTER — three meta-honesty sign-offs -->
+<footer>
+  <div class="shell">
+    <div class="signoff">
+      <p class="so-disc"><strong>Self-disclosure.</strong> This page's reasoning engine runs entirely on-device, on hand-authored data, with no network calls. I won't pretend it's a live model.</p>
+      <p class="so-disc"><strong>Live-check.</strong> This page checked NoxNocTech's reachability on load. Anything marked UNVERIFIED couldn't be confirmed live.</p>
+      <p class="closer">Everything else, I'll tell you in person — <span class="redact" id="redact">████████</span></p>
+      <div class="foot-meter meter" aria-label="Closing confidence — deliberately incomplete">
+        <div class="meter-top"><span class="mono" style="font-size:11px;">what this page can tell you</span><span class="mono meter-val" id="footMeterVal" style="font-size:11px;">—</span></div>
+        <div class="meter-track"><div class="meter-fill" id="footMeterFill"></div></div>
+        <span class="meter-gap">the bar never fully lifts. the last word is an admitted limit.</span>
+      </div>
     </div>
-  </footer>
+  </div>
+</footer>
 
-  <script src="/app.js"></script>
-</body>
-</html>
+</div><!-- /.page -->
+
+<!-- ============================================================
+     SCRIPTS — GSAP + ScrollTrigger + Lenis, graceful degradation
+     ============================================================ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.20/dist/lenis.min.js" defer></script>
+
+<script>
+/* ============================================================
+   THE HONEST ENGINE — vanilla controller
+   ------------------------------------------------------------
+   NOTE on the live check (#8): fetch(...,{mode:'no-cors'}) returns an
+   OPAQUE response. It CANNOT expose an HTTP status code or latency, and
+   even a resolved opaque response only weakly implies reachability. So we
+   only ever print REACHABILITY honestly — never a fake ms, "200", or uptime.
+   VERIFIED_STAT (below) is the single swap point for a future cited figure.
+   ============================================================ */
+
+/* ---- the one swap point for section 04's withheld stat ---- */
+const VERIFIED_STAT = null; // null = withhold. Future: {value:"…", source:"IRDAI Annual Report 20XX–XX"}
+
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const finePointer  = matchMedia('(hover:hover) and (pointer:fine)').matches && window.innerWidth > 768;
+
+document.documentElement.classList.toggle('motion-on', !reduceMotion);
+
+/* ---------- THEME (persist in sessionStorage; respect prefers) ---------- */
+(function theme(){
+  const root = document.documentElement, btn = document.getElementById('themeToggle');
+  const sysDark = matchMedia('(prefers-color-scheme: dark)').matches;
+  const stored = sessionStorage.getItem('sg-theme');
+  const initial = stored || (sysDark ? 'dark' : 'light');
+  apply(initial);
+  function apply(t){
+    root.setAttribute('data-theme', t);
+    btn.setAttribute('aria-pressed', t === 'dark');
+    const tc = document.querySelector(`meta[name=theme-color][media*="${t==='dark'?'dark':'light'}"]`);
+    // moon vs sun icon
+    document.getElementById('themeIcon').innerHTML = t === 'dark'
+      ? '<path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.5 6.5 0 0 0 9.8 9.8z"/>'
+      : '<circle cx="12" cy="12" r="4.2"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.4 1.4M17.6 17.6L19 19M19 5l-1.4 1.4M6.4 17.6L5 19"/>';
+  }
+  btn.addEventListener('click', () => {
+    const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    sessionStorage.setItem('sg-theme', next); apply(next);
+  });
+})();
+
+/* ---------- LOCAL CLOCK ---------- */
+(function clock(){
+  const el = document.getElementById('clock');
+  function tick(){
+    const d = new Date();
+    const p = n => String(n).padStart(2,'0');
+    el.textContent = `${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`;
+  }
+  tick(); setInterval(tick, 1000);
+})();
+
+/* ---------- PROXIMITY TYPE THESIS (sig A) ---------- */
+const THESIS = "I build AI that tells you when it doesn't know.";
+(function proximityType(){
+  const h1 = document.querySelector('.hero-thesis');
+  // accent cluster = "doesn't know" (the final two words incl. punctuation)
+  const accentStart = THESIS.indexOf("doesn't");
+  const glyphs = [];
+  // wrap each WORD in a nowrap span so the line only breaks at real spaces —
+  // per-glyph inline-block boxes otherwise let "when" split into "w" / "hen".
+  let ci = 0;
+  THESIS.split(' ').forEach((word, wi, arr) => {
+    const wrap = document.createElement('span');
+    wrap.className = 'word';
+    for (const ch of word){
+      const span = document.createElement('span');
+      span.className = 'glyph';
+      span.setAttribute('aria-hidden','true');
+      span.textContent = ch;
+      if (ci >= accentStart) span.classList.add('accent');
+      wrap.appendChild(span);
+      glyphs.push(span);
+      ci++;
+    }
+    h1.appendChild(wrap);
+    if (wi < arr.length - 1){ h1.appendChild(document.createTextNode(' ')); ci++; }
+  });
+  if (!finePointer || reduceMotion) return; // static tasteful resting weight on touch/reduced
+
+  const REST = { wght: 360, soft: 0 };
+  let px = -9999, py = -9999, active = false;
+  const cur = glyphs.map(() => ({ wght: REST.wght, soft: REST.soft, dy: 0 }));
+  const isAccent = glyphs.map(g => g.classList.contains('accent'));
+  // cached glyph centers — measured in a SEPARATE batched read pass, never inside the write loop
+  const cx = new Float64Array(glyphs.length);
+  const cy = new Float64Array(glyphs.length);
+  let dirty = true;
+
+  function measure(){           // batched READ pass only (no writes interleaved)
+    for (let i = 0; i < glyphs.length; i++){
+      const r = glyphs[i].getBoundingClientRect();
+      cx[i] = r.left + r.width/2;
+      cy[i] = r.top + r.height/2;
+    }
+    dirty = false;
+  }
+
+  window.addEventListener('pointermove', e => { px = e.clientX; py = e.clientY; active = true; }, { passive:true });
+  h1.addEventListener('pointerleave', () => { active = false; });
+  // recompute centers on layout change — set a flag, measured once at the top of the next frame
+  window.addEventListener('resize', () => { dirty = true; }, { passive:true });
+  window.addEventListener('scroll', () => { dirty = true; }, { passive:true });
+
+  let rafId = null, running = false;
+  function loop(){
+    if (dirty) measure();        // single batched read pass, before any writes this frame
+    if (active){
+      for (let i = 0; i < glyphs.length; i++){
+        const d = Math.hypot(px - cx[i], py - cy[i]);
+        const t = Math.max(0, 1 - d / 260);            // 0..1 proximity
+        const e = t*t*(3 - 2*t);                        // smoothstep
+        const tw = 300 + e * 520;                       // 300 → 820
+        const ts = e * 100;                             // SOFT 0 → 100
+        const tdy = isAccent[i] ? -e * 6 : 0;           // accent cluster reaches +6px toward cursor
+        const c = cur[i];
+        c.wght += (tw - c.wght) * 0.18;
+        c.soft += (ts - c.soft) * 0.18;
+        c.dy   += (tdy - c.dy) * 0.18;
+        glyphs[i].style.fontVariationSettings = `"opsz" 110, "wght" ${c.wght|0}, "SOFT" ${c.soft|0}`;
+        glyphs[i].style.transform = c.dy ? `translateY(${c.dy.toFixed(2)}px)` : '';
+      }
+    } else {
+      let moving = false;        // ease back to rest, then stop the loop entirely
+      for (let i = 0; i < glyphs.length; i++){
+        const c = cur[i];
+        c.wght += (REST.wght - c.wght) * 0.12;
+        c.soft += (REST.soft - c.soft) * 0.12;
+        c.dy   += (0 - c.dy) * 0.12;
+        if (Math.abs(c.wght - REST.wght) > 0.5 || c.soft > 0.5 || Math.abs(c.dy) > 0.05) moving = true;
+        glyphs[i].style.fontVariationSettings = `"opsz" 96, "wght" ${c.wght|0}, "SOFT" ${c.soft|0}`;
+        glyphs[i].style.transform = c.dy ? `translateY(${c.dy.toFixed(2)}px)` : '';
+      }
+      if (!moving){ running = false; rafId = null; return; } // settled: idle, no rAF burn
+    }
+    rafId = requestAnimationFrame(loop);
+  }
+  function start(){ if (!running){ running = true; dirty = true; rafId = requestAnimationFrame(loop); } }
+  function stop(){ running = false; active = false; if (rafId){ cancelAnimationFrame(rafId); rafId = null; } }
+  // re-arm the loop on interaction; cancel it when the hero scrolls offscreen
+  window.addEventListener('pointermove', start, { passive:true });
+  const heroIO = new IntersectionObserver(es => es.forEach(e => e.isIntersecting ? start() : stop()), { threshold: 0 });
+  heroIO.observe(h1);
+})();
+
+/* ============================================================
+   TOKEN-STREAM ENGINE (sig B) + perturbation + /Why?
+   ============================================================ */
+const ENGINE = (function(){
+  // answer tokens. claim:true tokens depend on the source.
+  const tokens = [
+    {t:"No",c:0.96},{t:"—",c:0.96},{t:"a",c:0.92},{t:"parent",c:0.95},{t:"sees",c:0.93},
+    {t:"only",c:0.94},{t:"their",c:0.95},{t:"own",c:0.95},{t:"child's",c:0.92},{t:"records.",c:0.91},
+    {t:"Another",c:0.88},{t:"school's",c:0.89},{t:"attendance",c:0.9},{t:"is",c:0.9},
+    {t:"sealed",c:0.93,claim:true},{t:"off",c:0.93,claim:true},{t:"at",c:0.92,claim:true},
+    {t:"the",c:0.92,claim:true},{t:"database",c:0.94,claim:true},{t:"itself,",c:0.93,claim:true},
+    {t:"not",c:0.74},{t:"in",c:0.72},{t:"app",c:0.7},{t:"code.",c:0.71}
+  ];
+  const region = document.getElementById('answerText');
+  const meterFill = document.getElementById('meterFill');
+  const meterVal  = document.getElementById('meterVal');
+  const sourceCard= document.getElementById('sourceCard');
+  const scLine    = document.getElementById('scLine');
+  const removeBtn = document.getElementById('removeSourceBtn');
+  const whyBtn    = document.getElementById('whyBtn');
+  const connPath  = document.getElementById('connPath');
+  const connector = document.getElementById('connector');
+  const answerRegion = document.getElementById('answerRegion');
+
+  const SOURCE_TEXT = "source: noxnoctech.com · Postgres FORCE ROW LEVEL SECURITY · verified";
+  let spans = [], wobbleTokens = [], built = false, sourcePresent = true, rafId = null;
+  const CAP = 0.92;
+
+  function wghtFor(c){ return Math.round(200 + c * 180); } // low→200, high→~372
+  function opacityFor(c){ return (0.4 + c * 0.6).toFixed(2); }
+
+  function aggregate(){
+    // mean of token confidences, with claim tokens collapsing when source pulled
+    let sum = 0;
+    tokens.forEach(tk => {
+      let c = tk.c;
+      if (tk.claim && !sourcePresent) c = 0.18;
+      if (!tk.claim && !sourcePresent && tk.c < 0.8) c = Math.max(0.45, tk.c - 0.12);
+      sum += c;
+    });
+    let agg = sum / tokens.length;
+    return Math.min(agg, CAP); // VISIBLY refuses to reach 100% — capped at 92%
+  }
+
+  function setMeter(animate){
+    const agg = aggregate();
+    const pct = (agg * 100);
+    if (typeof gsap !== 'undefined' && animate){
+      gsap.to(meterFill, { width: pct.toFixed(1) + '%', duration: 0.8, ease: 'power2.out' });
+    } else {
+      meterFill.style.width = pct.toFixed(0) + '%';
+    }
+    meterVal.textContent = pct.toFixed(0) + '%';
+    // tiny overshoot-settle handled via CSS transition; cap line is static at 92%
+  }
+
+  function build(stream){
+    if (built) return; built = true;
+    region.innerHTML = '';
+    spans = []; wobbleTokens = [];
+    tokens.forEach((tk, i) => {
+      const s = document.createElement('span');
+      s.className = 'tok' + (tk.claim ? ' claim supported' : '');
+      s.dataset.conf = tk.c;
+      s.style.fontVariationSettings = `"opsz" 32, "wght" ${wghtFor(tk.c)}`;
+      const txt = document.createElement('span');
+      txt.className = 'tok-text';
+      txt.textContent = tk.t;
+      s.appendChild(txt);
+      // /Why? readout
+      const why = document.createElement('span');
+      why.className = 'why' + (tk.c < 0.78 ? ' lowconf' : '');
+      why.setAttribute('aria-hidden','true');
+      why.textContent = tk.c.toFixed(2);
+      s.appendChild(why);
+      region.appendChild(s);
+      region.appendChild(document.createTextNode(' '));
+      spans.push(s);
+      if (tk.c < 0.8) wobbleTokens.push({ el: s, phase: Math.random()*6.28, amp: (0.85 - tk.c) * 7 });
+    });
+
+    // source line + meter
+    scLine.textContent = SOURCE_TEXT;
+
+    if (stream && !reduceMotion){
+      // staggered reveal — driven by GSAP (its ticker runs reliably; avoids CSS transition gating)
+      const useGsap = (typeof gsap !== 'undefined');
+      spans.forEach((s, i) => {
+        s.style.opacity = '0';
+        if (useGsap){
+          gsap.fromTo(s, { opacity:0, y:8 }, { opacity:parseFloat(opacityFor(tokens[i].c)), y:0, duration:0.5, delay:0.2 + i*0.045, ease:'power2.out' });
+        } else {
+          setTimeout(() => { s.style.opacity = opacityFor(tokens[i].c); }, 200 + i*45);
+        }
+      });
+      setTimeout(() => {
+        if (useGsap){ gsap.fromTo(sourceCard, { x:16, opacity:0 }, { x:0, opacity:1, duration:0.5, ease:'power2.out' }); }
+        sourceCard.classList.add('shown'); drawConnector(); typeReceipt();
+      }, 200 + spans.length*45 + 150);
+      setTimeout(startWobble, 200 + spans.length*45 + 400);
+      setTimeout(() => setMeter(true), 600);
+    } else {
+      // reduced motion / final settled state instantly
+      spans.forEach((s,i) => { s.style.opacity = opacityFor(tokens[i].c); s.style.transform='none'; });
+      sourceCard.classList.add('shown'); scLine.textContent = SOURCE_TEXT;
+      drawConnector(); setMeter(false);
+      document.body.classList.add('show-why-static');
+    }
+  }
+
+  /* type-on the provenance line like a receipt (#7) */
+  function typeReceipt(){
+    if (reduceMotion){ scLine.textContent = SOURCE_TEXT; return; }
+    scLine.textContent = '';
+    let i = 0;
+    (function step(){
+      if (i <= SOURCE_TEXT.length){ scLine.textContent = SOURCE_TEXT.slice(0,i); i++; setTimeout(step, 12); }
+    })();
+  }
+
+  /* SVG connector from claim run to source card (#3) */
+  function drawConnector(){
+    const firstClaim = spans.find(s => s.classList.contains('claim'));
+    if (!firstClaim) return;
+    const wrap = answerRegion.getBoundingClientRect();
+    const a = firstClaim.getBoundingClientRect();
+    const x1 = a.left - wrap.left + a.width/2;
+    const y1 = a.bottom - wrap.top;
+    const x2 = wrap.width - 6;
+    const y2 = Math.min(wrap.height - 8, y1 + 56);
+    connector.setAttribute('width', wrap.width);
+    connector.setAttribute('height', wrap.height);
+    const d = `M ${x1} ${y1} C ${x1} ${y1+34}, ${x2} ${y2-34}, ${x2} ${y2}`;
+    connPath.setAttribute('d', d);
+    const len = connPath.getTotalLength ? connPath.getTotalLength() : 300;
+    if (reduceMotion || typeof gsap === 'undefined'){ connPath.style.strokeDasharray='none'; connPath.style.strokeDashoffset='0'; return; }
+    connPath.style.strokeDasharray = len;
+    gsap.fromTo(connPath, { strokeDashoffset: len }, { strokeDashoffset: 0, duration: 0.8, ease: 'power2.out' });
+  }
+
+  /* wobble loop for low-confidence tokens (±1px sine) — paused when offscreen */
+  let wobbleVisible = true, wobbleRaf = null;
+  function startWobble(){
+    if (reduceMotion) return;
+    // cache the .tok-text nodes once — no per-frame DOM lookups
+    wobbleTokens.forEach(w => { w.txt = w.el.querySelector('.tok-text'); });
+    const eng = document.getElementById('engine');
+    if ('IntersectionObserver' in window){
+      new IntersectionObserver(es => es.forEach(e => { wobbleVisible = e.isIntersecting; }), { threshold: 0 }).observe(eng);
+    }
+    let t0 = performance.now();
+    function loop(now){
+      if (wobbleVisible){
+        const dt = (now - t0) / 1000;
+        const ampMul = sourcePresent ? 1 : 2.2; // perturbation intensifies wobble
+        wobbleTokens.forEach(w => {
+          const y = Math.sin(dt*2.1 + w.phase) * (w.amp/6) * ampMul;
+          w.txt.style.transform = `translateY(${y.toFixed(2)}px)`;
+        });
+      }
+      wobbleRaf = requestAnimationFrame(loop);
+    }
+    wobbleRaf = requestAnimationFrame(loop);
+  }
+
+  /* THE PERTURBATION (#4) — one state value drives everything */
+  function setSource(present){
+    sourcePresent = present;
+    removeBtn.setAttribute('aria-pressed', String(!present));
+    removeBtn.textContent = present ? 'remove the source' : 'restore the source';
+    sourceCard.classList.toggle('pulled', !present);
+    document.getElementById('scStatus').textContent = present ? 'VERIFIED' : 'PULLED';
+
+    const claimSpans = spans.filter(s => s.classList.contains('claim'));
+    if (!present){
+      // strike + rewrite the unsupported run to an honest refusal
+      claimSpans.forEach((s,i) => {
+        s.classList.remove('supported');
+        const txt = s.querySelector('.tok-text');
+        if (i === 0){
+          const reveal = () => {
+            txt.textContent = 'I can\u2019t verify this without the source.';
+            txt.style.color = 'var(--flag)';
+            txt.style.fontStyle = 'italic';
+            if (typeof gsap !== 'undefined' && !reduceMotion){
+              gsap.fromTo(txt, { clipPath:'inset(0 0 0 100%)' }, { clipPath:'inset(0 0 0 0%)', duration:0.45, ease:'power2.out' });
+            } else { txt.style.clipPath = 'none'; }
+          };
+          if (typeof gsap !== 'undefined' && !reduceMotion){
+            gsap.to(txt, { clipPath:'inset(0 0 0 100%)', duration:0.22, ease:'power2.in', onComplete: reveal });
+          } else { reveal(); }
+        } else {
+          if (typeof gsap !== 'undefined' && !reduceMotion){
+            gsap.to(txt, { opacity:0, duration:0.3, onComplete:()=>{ txt.textContent=''; txt.style.opacity='1'; } });
+          } else { txt.textContent=''; }
+        }
+        // wght drops 340 -> 200 on claim tokens; update /Why? number
+        if (typeof gsap !== 'undefined' && !reduceMotion){
+          gsap.to(s, { opacity:0.55, duration:0.5 });
+          s.style.fontVariationSettings = '"opsz" 32, "wght" 200';
+        } else {
+          s.style.opacity = '0.55'; s.style.fontVariationSettings = '"opsz" 32, "wght" 200';
+        }
+        const why = s.querySelector('.why');
+        why.textContent = '0.18'; why.classList.add('lowconf');
+      });
+      // fade connector
+      if (typeof gsap !== 'undefined' && !reduceMotion){ gsap.to(connPath, { opacity:0.2, duration:0.4 }); }
+      else { connPath.style.opacity='0.2'; }
+    } else {
+      claimSpans.forEach((s,i) => {
+        s.classList.add('supported');
+        const txt = s.querySelector('.tok-text');
+        txt.textContent = tokens[ spans.indexOf(s) ].t;
+        txt.style.clipPath='none'; txt.style.opacity='1'; txt.style.color=''; txt.style.fontStyle='';
+        s.style.fontVariationSettings = `"opsz" 32, "wght" ${wghtFor(tokens[spans.indexOf(s)].c)}`;
+        if (typeof gsap !== 'undefined' && !reduceMotion){ gsap.to(s, { opacity:parseFloat(opacityFor(tokens[spans.indexOf(s)].c)), duration:0.4 }); }
+        else { s.style.opacity = opacityFor(tokens[spans.indexOf(s)].c); }
+        const why = s.querySelector('.why');
+        why.textContent = tokens[spans.indexOf(s)].c.toFixed(2); why.classList.remove('lowconf');
+      });
+      if (typeof gsap !== 'undefined' && !reduceMotion){ gsap.to(connPath, { opacity:1, duration:0.4 }); }
+      else { connPath.style.opacity='1'; }
+    }
+    setMeter(true);
+  }
+
+  removeBtn.addEventListener('click', () => setSource(sourcePresent ? false : true));
+  whyBtn.addEventListener('click', () => {
+    const on = whyBtn.getAttribute('aria-pressed') === 'true';
+    whyBtn.setAttribute('aria-pressed', String(!on));
+    document.body.classList.toggle('show-why', !on);
+  });
+
+  // redraw connector on resize (debounced externally)
+  window.addEventListener('resize', () => { if (built && sourcePresent) drawConnector(); });
+
+  return { build, drawConnector };
+})();
+
+/* ---------- ClaimSaathi fine-print wall (decorative texture) ---------- */
+(function buildWall(){
+  const wall = document.getElementById('csWall');
+  // intentionally illegible Latin texture — aria-hidden on the container
+  const FILLER = "Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua enim ad minim veniam quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat duis aute irure dolor in reprehenderit voluptate velit esse cillum dolore eu fugiat nulla pariatur excepteur sint occaecat cupidatat non proident sunt in culpa qui officia deserunt mollit anim id est laborum";
+  const words = FILLER.split(' ');
+  for (let i = 0; i < 16; i++){
+    const line = document.createElement('div');
+    line.className = 'fineline';
+    let s = '';
+    for (let j = 0; j < 14; j++) s += words[(i*7+j) % words.length] + ' ';
+    line.textContent = s.trim();
+    // line 8 is the clause that will lift
+    if (i === 7){ line.dataset.lift = '1'; line.textContent = "Clause 7.2 — Room rent is capped at 1% of the sum insured per day; charges above this limit are deducted proportionately across the claim."; }
+    wall.appendChild(line);
+  }
+})();
+
+/* ---------- ReTeach confirm ---------- */
+(function reteach(){
+  const btn = document.getElementById('rtConfirm');
+  const draft = document.getElementById('rtDraft');
+  btn.addEventListener('click', () => {
+    const open = btn.getAttribute('aria-expanded') === 'true';
+    btn.setAttribute('aria-expanded', String(!open));
+    draft.classList.toggle('open', !open);
+    btn.classList.toggle('done', !open);
+    btn.textContent = !open ? 'confirmed ✓' : "I'll read it";
+  });
+})();
+
+/* ---------- NoxNocTech LIVE CHECK (#8) — reachability ONLY ---------- */
+(function liveCheck(){
+  const chip = document.getElementById('noxChip');
+  const txt  = document.getElementById('noxChipText');
+  function timeout(ms){ return new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), ms)); }
+  // fire when the exhibit enters view
+  const io = new IntersectionObserver((ents) => {
+    ents.forEach(e => {
+      if (!e.isIntersecting) return;
+      io.disconnect();
+      // no-cors → opaque response; cannot read status/latency. Resolve = reachable (weakly).
+      Promise.race([
+        fetch('https://noxnoctech.com', { method:'HEAD', mode:'no-cors', cache:'no-store' }),
+        timeout(3000)
+      ]).then(() => {
+        chip.className = 'chip live'; txt.textContent = 'LIVE · reachable';
+      }).catch(() => {
+        chip.className = 'chip unverified'; txt.textContent = 'UNVERIFIED · last-known reachable';
+      });
+    });
+  }, { threshold: 0.4 });
+  io.observe(document.getElementById('ex-noxnoctech'));
+})();
+
+/* ---------- EMAIL COPY ---------- */
+(function emailCopy(){
+  const btn = document.getElementById('emailCopy');
+  const status = document.getElementById('copyStatus');
+  btn.addEventListener('click', async () => {
+    const email = 'hello@shaquillegurung.com';
+    try { await navigator.clipboard.writeText(email); }
+    catch(e){ const ta=document.createElement('textarea'); ta.value=email; document.body.appendChild(ta); ta.select(); try{document.execCommand('copy');}catch(_){} ta.remove(); }
+    btn.classList.add('copied'); status.textContent = '✓ copied';
+    setTimeout(() => { btn.classList.remove('copied'); status.textContent=''; }, 2200);
+  });
+})();
+
+/* ---------- section 04 stat swap ---------- */
+(function statSwap(){
+  if (!VERIFIED_STAT) return;
+  document.getElementById('statSentence').textContent =
+    `In India, claims are rarely rejected outright — they're quietly shrunk by sub-limits and deductions. ${VERIFIED_STAT.value}`;
+  const chip = document.getElementById('statChip');
+  chip.textContent = `VERIFIED · ${VERIFIED_STAT.source}`;
+  chip.classList.add('verified');
+})();
+
+/* ---------- MARQUEE ---------- */
+(function marquee(){
+  const track = document.getElementById('marqueeTrack');
+  const items = ['NoxNocTech','ClaimSaathi','ReTeach','BoozyDEx','it quotes its sources','it admits what it can\u2019t read','a human stays in control','silence beats a confident wrong answer'];
+  const seq = items.concat(items); // duplicate for seamless loop, real selectable text
+  seq.forEach(t => { const s = document.createElement('span'); s.textContent = t; track.appendChild(s); });
+})();
+
+/* ============================================================
+   MOTION LAYER — GSAP + ScrollTrigger + Lenis (after defer loads)
+   ============================================================ */
+window.addEventListener('load', () => {
+  const hasGSAP = typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined';
+
+  // foot meter + redact reveal (always, even reduced)
+  document.getElementById('footMeterFill').style.width = reduceMotion ? '78%' : '0%';
+  document.getElementById('footMeterVal').textContent = '…';
+
+  if (reduceMotion){
+    // ---- REDUCED MOTION: render final settled state instantly ----
+    document.querySelectorAll('.reveal').forEach(el => { el.style.opacity = '1'; el.style.transform = 'none'; });
+    ENGINE.build(false);
+    document.body.classList.add('show-why'); // confidences shown as static labels
+    document.getElementById('footMeterVal').textContent = '78%';
+    // lift the clause statically in ClaimSaathi
+    const lift = document.querySelector('#csWall .fineline[data-lift]'); if (lift) lift.classList.add('lifted');
+    // type the q
+    document.getElementById('csQ1').textContent = "Dad's angioplasty — is the deluxe room covered?";
+    // fill bottle record
+    document.querySelectorAll('#bxRecord .v').forEach(v => v.textContent = v.dataset.val);
+    return;
+  }
+
+  if (!hasGSAP){
+    // ---- GSAP failed: native smooth scroll, simple reveals ----
+    document.documentElement.style.scrollBehavior = 'smooth';
+    document.querySelectorAll('.reveal').forEach(el => { el.style.opacity = '1'; el.style.transform='none'; });
+    const io = new IntersectionObserver((es)=>es.forEach(e=>{ if(e.isIntersecting){ runEntry(e.target); io.unobserve(e.target); }}),{threshold:.25});
+    document.querySelectorAll('#engine,#csWall,#bxRecord,.cs-grid').forEach(el=>io.observe(el));
+    document.getElementById('footMeterFill').style.width='78%';
+    document.getElementById('footMeterVal').textContent='78%';
+    return;
+  }
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  /* hero entrance — kinetic word reveal on load (over-the-top first impression) */
+  gsap.from('.hero-thesis .word', { y: 52, opacity: 0, duration: 1.0, ease: 'power4.out', stagger: 0.07, delay: 0.06 });
+
+  /* ---- Lenis bridged to ScrollTrigger via ONE gsap.ticker RAF ---- */
+  let lenis = null;
+  if (typeof Lenis !== 'undefined'){
+    try {
+      lenis = new Lenis({ duration: 1.1, easing: t => Math.min(1, 1.001 - Math.pow(2, -10*t)) });
+      lenis.on('scroll', ScrollTrigger.update);
+      gsap.ticker.add(time => lenis.raf(time * 1000));
+      gsap.ticker.lagSmoothing(0);
+    } catch(e){ lenis = null; document.documentElement.style.scrollBehavior='smooth'; }
+  } else {
+    document.documentElement.style.scrollBehavior='smooth';
+  }
+  // anchor nav works with lenis
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const id = a.getAttribute('href');
+      if (id === '#' || id === '#top'){ if(lenis){e.preventDefault(); lenis.scrollTo(0);} return; }
+      const t = document.querySelector(id);
+      if (t && lenis){ e.preventDefault(); lenis.scrollTo(t, { offset: -20 }); }
+    });
+  });
+
+  /* ---- reveals: clip-path wipe + rise, directorial per type ---- */
+  gsap.utils.toArray('.reveal').forEach(el => {
+    const kind = el.dataset.reveal || 'rise';
+    const from = kind === 'wipe'
+      ? { opacity: 0, y: 12, clipPath: 'inset(0 0 100% 0)' }
+      : { opacity: 0, y: 16 };
+    const to = kind === 'wipe'
+      ? { opacity: 1, y: 0, clipPath: 'inset(0 0 0% 0)', duration: 0.95, ease: 'power3.out' }
+      : { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out' };
+    gsap.set(el, from);
+    ScrollTrigger.create({
+      trigger: el, start: 'top 86%',
+      onEnter: () => gsap.to(el, to)
+    });
+  });
+
+  /* vary the four exhibits' rhythm (directorial shot grammar) */
+  const exShots = {
+    'ex-noxnoctech': { x: -20, dur: 1.0 },
+    'ex-claimsaathi': { x: 24, dur: 0.95 },
+    'ex-reteach': { y: 28, dur: 0.85 },
+    'ex-boozydex': { scale: 0.97, dur: 1.05 }
+  };
+  Object.entries(exShots).forEach(([id, s]) => {
+    const el = document.getElementById(id); if(!el) return;
+    gsap.set(el, { opacity: 0, x: s.x||0, y: s.y||0, scale: s.scale||1 });
+    ScrollTrigger.create({ trigger: el, start: 'top 82%', onEnter: () =>
+      gsap.to(el, { opacity:1, x:0, y:0, scale:1, duration:s.dur, ease:'power3.out' }) });
+  });
+
+  /* ---- engine: build token stream on entering view, once ---- */
+  ScrollTrigger.create({
+    trigger: '#engine', start: 'top 70%', once: true,
+    onEnter: () => ENGINE.build(true)
+  });
+
+  /* ---- ClaimSaathi: type question, lift clause ---- */
+  let csTyped = false;
+  ScrollTrigger.create({
+    trigger: '#ex-claimsaathi', start: 'top 60%', once: true,
+    onEnter: () => {
+      if (csTyped) return; csTyped = true;
+      const q = document.getElementById('csQ1');
+      const text = "Dad's angioplasty — is the deluxe room covered?";
+      let i=0; (function step(){ if(i<=text.length){ q.textContent=text.slice(0,i); i++; setTimeout(step,40);} })();
+      setTimeout(() => { const lift = document.querySelector('#csWall .fineline[data-lift]'); if(lift) lift.classList.add('lifted'); }, 900);
+    }
+  });
+
+  /* ---- BoozyDEx: fields populate on enter ---- */
+  ScrollTrigger.create({
+    trigger: '#bxRecord', start: 'top 75%', once: true,
+    onEnter: () => {
+      const fields = document.querySelectorAll('#bxRecord .v');
+      fields.forEach((v, i) => {
+        setTimeout(() => {
+          const val = v.dataset.val;
+          v.innerHTML = '<span class="cursorblink"></span>';
+          let j=0; (function step(){ if(j<=val.length){ v.textContent=val.slice(0,j)+''; v.innerHTML = val.slice(0,j)+'<span class="cursorblink"></span>'; j++; setTimeout(step,28);} else { v.textContent=val; } })();
+        }, i*420);
+      });
+    }
+  });
+
+  /* ---- foot meter scrub up to 78% (never full) on footer enter ---- */
+  ScrollTrigger.create({
+    trigger: 'footer', start: 'top 80%', once: true,
+    onEnter: () => {
+      gsap.to('#footMeterFill', { width: '78%', duration: 1.1, ease: 'power2.out' });
+      const v = document.getElementById('footMeterVal'); let n=0;
+      const t = setInterval(()=>{ n+=3; if(n>=78){n=78;clearInterval(t);} v.textContent=n+'%'; }, 36);
+    }
+  });
+
+  /* ---- NUMBERED INDEX active-state on scroll (#11) ---- */
+  const navLinks = document.querySelectorAll('.mi-nav a');
+  ['s01','s02','s03','s04','s05','s06'].forEach((id, i) => {
+    ScrollTrigger.create({
+      trigger: '#'+id, start: 'top 50%', end: 'bottom 50%',
+      onToggle: self => {
+        if (self.isActive){
+          navLinks.forEach(l => l.setAttribute('aria-current','false'));
+          navLinks[i].setAttribute('aria-current','true');
+        }
+      }
+    });
+  });
+
+  /* ---- VELOCITY MARQUEE (#10) ---- */
+  (function marqueeMotion(){
+    const track = document.getElementById('marqueeTrack');
+    const wEl = document.querySelector('.marquee');
+    let half = track.scrollWidth / 2, x = 0, base = 0.6, vel = 0, paused = false;
+    wEl.addEventListener('mouseenter', () => paused = true);
+    wEl.addEventListener('mouseleave', () => paused = false);
+    if (lenis) lenis.on('scroll', ({ velocity }) => { vel = velocity || 0; });
+    else window.addEventListener('scroll', () => { vel = 6; setTimeout(()=>vel=0,80); }, {passive:true});
+    gsap.ticker.add(() => {
+      if (paused) return;
+      const dir = vel >= 0 ? 1 : -1;
+      const speed = base + Math.min(Math.abs(vel) * 0.4, 9);
+      x -= speed * dir * 0.5;
+      if (x <= -half) x += half;
+      if (x > 0) x -= half;
+      track.style.transform = `translateX(${x}px)`;
+    });
+  })();
+
+  /* ---- CUSTOM CURSOR (#12) ---- */
+  if (finePointer){
+    document.body.classList.add('cursor-on');
+    const ring = document.querySelector('.cursor-ring');
+    const label = document.querySelector('.cursor-label');
+    let mx = innerWidth/2, my = innerHeight/2, rx = mx, ry = my;
+    window.addEventListener('pointermove', e => { mx = e.clientX; my = e.clientY; }, {passive:true});
+    gsap.ticker.add(() => {
+      rx += (mx - rx) * 0.18; ry += (my - ry) * 0.18;
+      ring.style.transform = `translate(${rx}px,${ry}px) translate(-50%,-50%)`;
+      label.style.transform = `translate(${mx}px,${my}px) translate(14px,8px)`;
+    });
+    const LABELS = { show:'SHOW SOURCE', read:'read', live:'live ↗', copy:'copy' };
+    document.querySelectorAll('[data-cursor]').forEach(el => {
+      el.addEventListener('mouseenter', () => { ring.classList.add('grow'); label.textContent = LABELS[el.dataset.cursor]||''; label.style.opacity='1'; });
+      el.addEventListener('mouseleave', () => { ring.classList.remove('grow'); label.style.opacity='0'; });
+    });
+  }
+
+  /* ---- MAGNETIC CONTACT (#9) ---- */
+  if (finePointer){
+    const btn = document.getElementById('contactBtn');
+    const xTo = gsap.quickTo(btn, 'x', { duration:0.3, ease:'power3' });
+    const yTo = gsap.quickTo(btn, 'y', { duration:0.3, ease:'power3' });
+    btn.addEventListener('pointermove', e => {
+      const r = btn.getBoundingClientRect();
+      const dx = (e.clientX - (r.left+r.width/2)) * 0.3;
+      const dy = (e.clientY - (r.top+r.height/2)) * 0.3;
+      xTo(Math.max(-6,Math.min(6,dx))); yTo(Math.max(-6,Math.min(6,dy)));
+    });
+    btn.addEventListener('pointerleave', () => { xTo(0); yTo(0); });
+  }
+
+  /* ---- debounced ScrollTrigger.refresh + connector redraw on resize ---- */
+  let rt;
+  window.addEventListener('resize', () => {
+    clearTimeout(rt);
+    rt = setTimeout(() => { ScrollTrigger.refresh(); ENGINE.drawConnector(); }, 200);
+  });
+});
+
+/* receipt trigger (NoxNocTech) — keyboard operable, works without GSAP */
+(function receipt(){
+  const trig = document.getElementById('rlsTrigger');
+  const rec = document.getElementById('rlsReceipt');
+  function toggle(){
+    const open = trig.getAttribute('aria-expanded') === 'true';
+    trig.setAttribute('aria-expanded', String(!open));
+    rec.classList.toggle('open', !open);
+  }
+  trig.addEventListener('click', toggle);
+  trig.addEventListener('keydown', e => { if(e.key==='Enter'||e.key===' '){ e.preventDefault(); toggle(); } });
+})();
+
+/* contact + start-project buttons — attached always (every motion path) */
+(function navButtons(){
+  const go = () => { const t = document.getElementById('s06'); if (t) t.scrollIntoView({ behavior:'smooth', block:'start' }); };
+  const c = document.getElementById('contactBtn'); if (c) c.addEventListener('click', go);
+  const sp = document.getElementById('startProjectBtn'); if (sp) sp.addEventListener('click', go);
+})();
+
+function runEntry(){ /* no-GSAP fallback hook, reveals already shown */ }
+</script>
+
+
+</body></html>
