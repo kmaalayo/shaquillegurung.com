@@ -42,6 +42,7 @@ Each project is framed as proof of one honest "primitive."
 ### BoozyDEx — in progress
 - **What it is:** A data project: structured, searchable knowledge about what's actually in the bottle.
 - **The honest primitive — structured, verifiable facts:** It captures clean, structured records (category, ABV, region, mashbill, and the like) so the underlying facts are searchable rather than guessed.
+- **Note for the Guide:** the site shows one illustrative record as a UI demo. Do not assert specific bottle facts (ABV, region, mashbill) — point visitors to the project rather than quoting any figures.
 
 ---
 
@@ -51,7 +52,7 @@ Shaquille builds for the worst moment, not the demo — the parent who can't ope
 
 So he obsesses over edge cases and over the words on the screen. The core ethos: **silence beats a confident wrong answer.** When the system isn't sure, it says so — plainly — instead of guessing well enough to be believed and wrong enough to hurt.
 
-He holds himself to an honesty standard even in his own marketing. He won't quote a statistic until he's sourced it; where a figure isn't yet verified, the site marks it "STAT WITHHELD · UNVERIFIED" rather than printing an unsourced number. He won't pretend a demo is something it isn't: the reasoning engine on the homepage runs entirely on-device, on hand-authored data, with no network calls, and the page says so openly.
+He holds himself to an honesty standard even in his own marketing. He won't quote a statistic until he's sourced it; where a figure isn't yet verified, the site marks it "STAT WITHHELD · UNVERIFIED" rather than printing an unsourced number. He won't pretend a demo is something it isn't: the homepage reasoning engine (the token-by-token confidence demo) runs entirely on-device on hand-authored data — no AI model and no network call powers it, and the page says so openly. (The page does make one network call on load: a live reachability check of NoxNocTech, and it reports reachability only — never a fabricated status.)
 
 ---
 

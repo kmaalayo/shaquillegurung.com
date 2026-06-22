@@ -98,7 +98,16 @@ app.post("/api/chat", chatLimiter, async (req, res) => {
 });
 
 // Contact endpoint — real delivery via Resend (shares lib/resend with the Guide's tool).
-app.post("/api/contact", async (req, res) => {
+// Stricter than chat: every call sends a real email, so cap it hard per IP (mail-bomb guard).
+const contactLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  limit: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  handler: (req, res) =>
+    res.status(429).json({ error: "Too many messages. Please try again later." }),
+});
+app.post("/api/contact", contactLimiter, async (req, res) => {
   const { name, email, message } = req.body || {};
   const v = validateLead({ name, email, message });
   if (!v.ok) return res.status(400).json({ error: v.error });

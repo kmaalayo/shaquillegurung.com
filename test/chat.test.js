@@ -131,3 +131,38 @@ test("runGuide reports a tool failure to the model but still completes", async (
   assert.equal(events.at(-1).type, "done");
   assert.ok(events.some((e) => e.type === "token"));
 });
+
+test("runGuide sends at most one lead per request even if the model calls the tool twice", async () => {
+  const events = [];
+  let leadCalls = 0;
+  const lead = { name: "Ada", email: "ada@x.com", message: "Build a widget" };
+  const client = fakeClient([
+    fakeStream({
+      texts: [],
+      final: {
+        stop_reason: "tool_use",
+        content: [
+          { type: "tool_use", id: "t1", name: "submit_project_lead", input: lead },
+          { type: "tool_use", id: "t2", name: "submit_project_lead", input: lead },
+        ],
+      },
+    }),
+    fakeStream({
+      texts: ["All set."],
+      final: { stop_reason: "end_turn", content: [{ type: "text", text: "All set." }] },
+    }),
+  ]);
+
+  await runGuide({
+    client,
+    system: [{ type: "text", text: "sys" }],
+    messages: [{ role: "user", content: "hire" }],
+    sendLead: async () => {
+      leadCalls++;
+    },
+    emit: (e) => events.push(e),
+  });
+
+  assert.equal(leadCalls, 1);
+  assert.equal(events.at(-1).type, "done");
+});

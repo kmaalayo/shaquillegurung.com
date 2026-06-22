@@ -1,7 +1,7 @@
 // chat-widget.js — "the Guide" chat widget. Self-contained, zero-dependency, Shadow-DOM
 // isolated, reusable across sites. Knows nothing about Claude: it POSTs { messages } to an
 // endpoint and renders the SSE text that streams back. Configure with:
-//   ChatWidget.init({ endpoint, launcher:'edge-tab', accent, title, greeting })
+//   ChatWidget.init({ endpoint, launcher:'edge-tab', accent, title, greeting, contactEmail })
 (function () {
   "use strict";
 
@@ -12,6 +12,7 @@
     title: "Ask the guide",
     greeting:
       "Hi — I'm the Guide. Ask me anything about Shaquille's work, or tell me about a project you'd like built.",
+    contactEmail: "", // optional; shown in error fallbacks. Empty keeps the widget site-agnostic.
   };
 
   let instance = null;
@@ -40,6 +41,8 @@
       --cw-line: rgba(27,33,29,.12);
     }
     *, *::before, *::after { box-sizing: border-box; }
+
+    .cw-sr { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 
     .cw-tab {
       position: fixed; right: 0; top: 50%; transform: translateY(-50%);
@@ -77,6 +80,7 @@
       font-size: 22px; line-height: 1; cursor: pointer; padding: 2px 6px; border-radius: 8px;
     }
     .cw-close:hover { background: var(--cw-soft); color: var(--cw-fg); }
+    .cw-close:focus-visible { outline: 2px solid var(--cw-accent); outline-offset: 1px; }
 
     .cw-log { flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
     .cw-msg {
@@ -103,6 +107,7 @@
       padding: 0 14px; height: 38px; border-radius: 10px; cursor: pointer;
     }
     .cw-send:disabled { opacity: .5; cursor: default; }
+    .cw-send:focus-visible { outline: 2px solid var(--cw-accent); outline-offset: 2px; }
 
     @media (prefers-reduced-motion: reduce) {
       .cw-tab, .cw-panel { transition: none; }
@@ -131,25 +136,41 @@
 
     const titleEl = el("h2", { id: "cw-title", class: "cw-title" }, cfg.title);
     const closeBtn = el("button", { class: "cw-close", type: "button", "aria-label": "Close chat" }, "×");
-    const log = el("div", { class: "cw-log", role: "log", "aria-live": "polite", "aria-atomic": "false" });
+    // Transcript: aria-live OFF here (per-token announcements flood screen readers); the
+    // completed reply is announced once via the dedicated .cw-sr region below.
+    const log = el("div", { class: "cw-log", role: "log", "aria-live": "off" });
+    const sr = el("div", { class: "cw-sr", "aria-live": "polite", "aria-atomic": "true" });
     const input = el("textarea", { class: "cw-input", rows: "1", "aria-label": "Your message", placeholder: "Type your message…" });
     const sendBtn = el("button", { class: "cw-send", type: "submit" }, "Send");
     const form = el("form", { class: "cw-form" }, [input, sendBtn]);
     const panel = el(
       "div",
       { class: "cw-panel", role: "dialog", "aria-modal": "false", "aria-labelledby": "cw-title", "data-open": "false" },
-      [el("header", { class: "cw-head" }, [titleEl, closeBtn]), log, form]
+      [el("header", { class: "cw-head" }, [titleEl, closeBtn]), log, sr, form]
     );
     root.append(tab, panel);
 
     const history = []; // [{ role, content }] sent to the server each turn
     let streaming = false;
+    let currentController = null; // AbortController for the in-flight request
 
     function addMessage(role, text) {
       const bubble = el("div", { class: "cw-msg cw-msg--" + role }, text || "");
       log.appendChild(bubble);
       log.scrollTop = log.scrollHeight;
       return bubble;
+    }
+    function announce(text) {
+      sr.textContent = ""; // reset so identical text re-announces
+      sr.textContent = text;
+    }
+    function contactSuffix() {
+      return cfg.contactEmail ? " You can email " + cfg.contactEmail + "." : "";
+    }
+    function errorText(status) {
+      if (status === 429) return "You've sent a lot of messages — please wait a few minutes and try again.";
+      if (status === 503) return "The Guide isn't available right now." + contactSuffix();
+      return "Sorry — something went wrong. Please try again.";
     }
 
     addMessage("assistant", cfg.greeting); // canned UI greeting (not part of model history)
@@ -162,6 +183,7 @@
     function close() {
       panel.dataset.open = "false";
       tab.setAttribute("aria-expanded", "false");
+      if (currentController) currentController.abort(); // stop billing for a dismissed reply
       tab.focus();
     }
     function toggle() {
@@ -170,8 +192,28 @@
 
     tab.addEventListener("click", toggle);
     closeBtn.addEventListener("click", close);
+
+    // Keep keyboard focus inside the panel while it's open (lightweight wrap; non-modal).
     panel.addEventListener("keydown", function (e) {
-      if (e.key === "Escape") { e.preventDefault(); close(); }
+      if (e.key === "Escape") {
+        e.preventDefault();
+        close();
+        return;
+      }
+      if (e.key === "Tab") {
+        const f = [closeBtn, input, sendBtn].filter((x) => !x.disabled);
+        if (!f.length) return;
+        const first = f[0];
+        const last = f[f.length - 1];
+        const active = root.activeElement; // shadow-aware
+        if (e.shiftKey && active === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && active === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
     });
     input.addEventListener("keydown", function (e) {
       if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); form.requestSubmit(); }
@@ -188,12 +230,6 @@
       tab.classList.toggle("cw-busy", b);
     }
 
-    function errorText(status) {
-      if (status === 429) return "You've sent a lot of messages — please wait a few minutes and try again.";
-      if (status === 503) return "The Guide isn't available right now. You can email hi@shaquillegurung.com.";
-      return "Sorry — something went wrong. Please try again.";
-    }
-
     form.addEventListener("submit", async function (e) {
       e.preventDefault();
       const text = input.value.trim();
@@ -207,6 +243,8 @@
 
     async function streamReply() {
       setBusy(true);
+      const controller = new AbortController();
+      currentController = controller;
       const bubble = addMessage("assistant", "");
       const typing = el("span", { class: "cw-typing" }, [el("i"), el("i"), el("i")]);
       bubble.appendChild(typing);
@@ -227,6 +265,7 @@
           method: "POST",
           headers: { "Content-Type": "application/json", Accept: "text/event-stream" },
           body: JSON.stringify({ messages: history }),
+          signal: controller.signal,
         });
 
         if (!res.ok || !res.body) {
@@ -246,8 +285,7 @@
             while ((sep = buffer.indexOf("\n\n")) !== -1) {
               const frame = buffer.slice(0, sep);
               buffer = buffer.slice(sep + 2);
-              const lines = frame.split("\n");
-              for (const line of lines) {
+              for (const line of frame.split("\n")) {
                 if (!line.startsWith("data:")) continue; // skip ": comment" heartbeats
                 const data = line.slice(5).trim();
                 if (!data) continue;
@@ -268,19 +306,28 @@
               }
             }
           }
+          try { await reader.cancel(); } catch (_) {} // release the stream deterministically
         }
-      } catch (_) {
-        errored = true;
-        ensureNode();
-        if (!acc) textNode.appendData("I couldn't reach the Guide just now. Please try again, or email hi@shaquillegurung.com.");
+      } catch (err) {
+        if (controller.signal.aborted) {
+          // Intentional cancel (panel closed) — leave whatever already streamed, no error text.
+        } else {
+          errored = true;
+          ensureNode();
+          // A drop AFTER partial tokens must not read as a finished answer (trust!).
+          textNode.appendData(
+            acc ? "\n\n[reply cut off — please try again]" : "I couldn't reach the Guide just now." + contactSuffix()
+          );
+        }
       } finally {
-        if (!textNode) {
-          // No tokens and no error path hit a node — clear the typing dots.
-          bubble.textContent = "";
+        if (!textNode) bubble.textContent = ""; // clear typing dots if nothing rendered
+        if (acc && !errored && !controller.signal.aborted) {
+          history.push({ role: "assistant", content: acc });
+          announce(acc); // one screen-reader announcement of the completed reply
         }
-        if (acc && !errored) history.push({ role: "assistant", content: acc });
+        if (currentController === controller) currentController = null;
         setBusy(false);
-        input.focus();
+        if (!controller.signal.aborted) input.focus();
         log.scrollTop = log.scrollHeight;
       }
     }
@@ -289,7 +336,11 @@
       open: open,
       close: close,
       toggle: toggle,
-      destroy: function () { host.remove(); instance = null; },
+      destroy: function () {
+        if (currentController) currentController.abort();
+        host.remove();
+        instance = null;
+      },
     };
     return instance;
   }

@@ -17,3 +17,8 @@ test("validateLead rejects a malformed email", () => {
 test("validateLead accepts a complete, valid lead", () => {
   assert.equal(validateLead({ name: "Ada", email: "ada@x.com", message: "Build me a widget" }).ok, true);
 });
+
+test("validateLead rejects an over-long name or message", () => {
+  assert.equal(validateLead({ name: "x".repeat(200), email: "a@b.com", message: "hi" }).ok, false);
+  assert.equal(validateLead({ name: "A", email: "a@b.com", message: "y".repeat(5000) }).ok, false);
+});
