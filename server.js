@@ -5,11 +5,17 @@
 import express from "express";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { rateLimit } from "express-rate-limit";
+import { getAnthropic } from "./lib/anthropic.js";
+import { buildSystem } from "./lib/guide.js";
+import { runGuide, sanitizeMessages } from "./lib/chat.js";
+import { sendLead, validateLead } from "./lib/resend.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 
 app.disable("x-powered-by");
+app.set("trust proxy", 1); // behind Railway's proxy → real client IP for rate limiting
 app.use(express.json({ limit: "100kb" }));
 
 // ---- API -------------------------------------------------------------------
@@ -23,19 +29,85 @@ app.get("/api/health", (req, res) => {
   });
 });
 
-// Contact endpoint (scaffold). Validates input now; real delivery (Resend) is the
-// next increment — see README. Returns 501 until wired so a message is never
-// silently dropped. The v1 site uses a mailto: link, so this isn't called yet.
-app.post("/api/contact", (req, res) => {
+// ---- The Guide (chat) ------------------------------------------------------
+// Per-IP rate limit (this endpoint spends Anthropic tokens). trust proxy is set above so
+// each visitor is bucketed by real IP behind Railway.
+const chatLimiter = rateLimit({
+  windowMs: 10 * 60 * 1000,
+  limit: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  handler: (req, res) =>
+    res.status(429).json({ error: "Too many messages. Please wait a few minutes and try again." }),
+});
+
+// POST /api/chat — streams Claude's reply as SSE and handles the submit_project_lead tool
+// loop. Registered ABOVE the /api 404 + SPA fallback below so it isn't swallowed.
+app.post("/api/chat", chatLimiter, async (req, res) => {
+  const messages = sanitizeMessages(req.body && req.body.messages);
+  if (!messages) {
+    return res.status(400).json({ error: "messages must be a non-empty array of text turns." });
+  }
+
+  let client;
+  try {
+    client = getAnthropic();
+  } catch {
+    return res.status(503).json({ error: "The Guide isn't available right now." });
+  }
+
+  // SSE: never set Content-Length (keeps chunked encoding so tokens stream); no compression
+  // is mounted on this app, so res.flush() is neither needed nor available.
+  res.writeHead(200, {
+    "Content-Type": "text/event-stream; charset=utf-8",
+    "Cache-Control": "no-cache, no-transform",
+    Connection: "keep-alive",
+    "X-Accel-Buffering": "no",
+  });
+  res.flushHeaders();
+  res.write(": connected\n\n");
+
+  let closed = false;
+  const ac = new AbortController();
+  req.on("close", () => {
+    closed = true;
+    ac.abort(); // stop the in-flight Anthropic stream so we don't bill into a dead socket
+  });
+  const emit = (event) => {
+    if (!closed) res.write(`data: ${JSON.stringify(event)}\n\n`);
+  };
+
+  try {
+    await runGuide({
+      client,
+      system: buildSystem(messages[messages.length - 1].content),
+      messages,
+      sendLead,
+      emit,
+      isClosed: () => closed,
+      signal: ac.signal,
+    });
+  } catch {
+    emit({ type: "error", message: "Something went wrong. Please try again." });
+  } finally {
+    if (!closed) res.end();
+  }
+});
+
+// Contact endpoint — real delivery via Resend (shares lib/resend with the Guide's tool).
+app.post("/api/contact", async (req, res) => {
   const { name, email, message } = req.body || {};
-  if (!name || !email || !message) {
-    return res.status(400).json({ error: "name, email and message are required." });
+  const v = validateLead({ name, email, message });
+  if (!v.ok) return res.status(400).json({ error: v.error });
+  try {
+    await sendLead({ name, email, message });
+    return res.json({ ok: true });
+  } catch (e) {
+    if (e.code === "NO_RESEND_KEY" || e.code === "NO_CONTACT_TO") {
+      return res.status(503).json({ error: "Contact delivery isn't configured yet." });
+    }
+    return res.status(502).json({ error: "Couldn't send your message — please email directly." });
   }
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    return res.status(400).json({ error: "Please provide a valid email address." });
-  }
-  // TODO: wire Resend (RESEND_API_KEY + CONTACT_TO) to actually deliver this.
-  return res.status(501).json({ error: "Contact delivery isn't wired up yet." });
 });
 
 // Unknown /api/* routes -> JSON 404 (don't fall through to the page).
