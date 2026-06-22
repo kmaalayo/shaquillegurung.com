@@ -861,8 +861,8 @@ body.motion-on .reveal{ opacity:0; }
     <div class="colophon-grid">
       <div class="contact-block reveal" data-reveal="rise">
         <span class="kicker label">the address I'm setting up</span>
-        <button class="email-copy" id="emailCopy" data-cursor="copy" aria-label="Copy email hello@shaquillegurung.com">
-          hello@shaquillegurung.com
+        <button class="email-copy" id="emailCopy" data-cursor="copy" aria-label="Copy email hi@shaquillegurung.com">
+          hi@shaquillegurung.com
           <svg class="tick" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 13l4 4L19 7"></path></svg>
         </button>
         <span class="mono" id="copyStatus" aria-live="polite" style="font-size:11px;color:var(--verified);display:block;height:14px;margin-top:6px;"></span>
@@ -890,6 +890,7 @@ body.motion-on .reveal{ opacity:0; }
   <div class="shell">
     <div class="signoff">
       <p class="so-disc"><strong>Self-disclosure.</strong> This page's reasoning engine runs entirely on-device, on hand-authored data, with no network calls. I won't pretend it's a live model.</p>
+      <p class="so-disc"><strong>The Guide.</strong> The chat in the corner is different — it's a live AI (Claude), grounded in a hand-authored knowledge base about me and my work. It answers only from that, and tells you when it doesn't know.</p>
       <p class="so-disc"><strong>Live-check.</strong> This page checked NoxNocTech's reachability on load. Anything marked UNVERIFIED couldn't be confirmed live.</p>
       <p class="closer">Everything else, I'll tell you in person — <span class="redact" id="redact">████████</span></p>
       <div class="foot-meter meter" aria-label="Closing confidence — deliberately incomplete">
@@ -909,6 +910,21 @@ body.motion-on .reveal{ opacity:0; }
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.20/dist/lenis.min.js" defer></script>
+
+<!-- The Guide — chat widget (loads deferred; init after DOM + widget are ready) -->
+<script src="/chat-widget.js" defer></script>
+<script>
+  window.addEventListener("DOMContentLoaded", function () {
+    if (!window.ChatWidget) return;
+    ChatWidget.init({
+      endpoint: "/api/chat",
+      launcher: "edge-tab",
+      accent: "#2F6B4F",
+      title: "Ask the guide",
+      greeting: "Hi — I'm the Guide. Ask me anything about Shaquille's work, or tell me about a project you'd like built."
+    });
+  });
+</script>
 
 <script>
 /* ============================================================
@@ -1355,7 +1371,7 @@ const ENGINE = (function(){
   const btn = document.getElementById('emailCopy');
   const status = document.getElementById('copyStatus');
   btn.addEventListener('click', async () => {
-    const email = 'hello@shaquillegurung.com';
+    const email = 'hi@shaquillegurung.com';
     try { await navigator.clipboard.writeText(email); }
     catch(e){ const ta=document.createElement('textarea'); ta.value=email; document.body.appendChild(ta); ta.select(); try{document.execCommand('copy');}catch(_){} ta.remove(); }
     btn.classList.add('copied'); status.textContent = '✓ copied';

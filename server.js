@@ -69,7 +69,10 @@ app.post("/api/chat", chatLimiter, async (req, res) => {
 
   let closed = false;
   const ac = new AbortController();
-  req.on("close", () => {
+  // res (NOT req) 'close' is the correct disconnect signal: req 'close' fires as soon as
+  // the request body is consumed, which would abort the stream immediately. res 'close'
+  // fires only when the client actually disconnects (or after we finish).
+  res.on("close", () => {
     closed = true;
     ac.abort(); // stop the in-flight Anthropic stream so we don't bill into a dead socket
   });
