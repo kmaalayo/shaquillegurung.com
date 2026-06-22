@@ -422,7 +422,7 @@ body.show-why .tok .why{ opacity:1; }
 }
 .receipt-inner code{ color:var(--ink); }
 
-/* ClaimSaathi */
+/* ClaimSarathi */
 .cs-grid{ display:grid; grid-template-columns:1fr 1fr; gap:clamp(20px,3vw,40px); align-items:start; }
 @media (max-width:760px){ .cs-grid{ grid-template-columns:1fr; } }
 .cs-finewall{ position:relative; border:1px solid var(--hairline); border-radius:3px; background:var(--bg-sunk); padding:18px; max-height:340px; overflow:hidden; }
@@ -687,7 +687,7 @@ body.motion-on .reveal{ opacity:0; }
   <section id="s02" aria-labelledby="s02-h">
     <div class="sec-head"><span class="sec-num">02 / thesis</span><h2 class="sec-title" id="s02-h">Three behaviors, not buzzwords.</h2></div>
     <div class="manifesto">
-      <a class="principle reveal" data-reveal="wipe" href="#ex-claimsaathi">It quotes its sources.<span class="arrow">→ ClaimSaathi</span></a>
+      <a class="principle reveal" data-reveal="wipe" href="#ex-claimsarathi">It quotes its sources.<span class="arrow">→ ClaimSarathi</span></a>
       <a class="principle reveal" data-reveal="wipe" href="#ex-reteach"><em>It admits what it can't read.</em><span class="arrow">→ ReTeach</span></a>
       <a class="principle reveal" data-reveal="wipe" href="#ex-noxnoctech">A human stays in control.<span class="arrow">→ NoxNocTech / ReTeach</span></a>
     </div>
@@ -728,12 +728,12 @@ body.motion-on .reveal{ opacity:0; }
         </div>
       </article>
 
-      <!-- 02 ClaimSaathi -->
-      <article class="exhibit reveal" id="ex-claimsaathi" data-reveal="rise">
+      <!-- 02 ClaimSarathi -->
+      <article class="exhibit reveal" id="ex-claimsarathi" data-reveal="rise">
         <div class="ex-head">
           <span class="ex-num">02</span>
-          <span class="ex-name">ClaimSaathi</span>
-          <span class="chip progress"><span class="vdot"></span>IN PROGRESS</span>
+          <span class="ex-name"><a href="https://claimsarathi.com" target="_blank" rel="noopener" data-cursor="live">ClaimSarathi ↗</a></span>
+          <span class="chip live"><span class="vdot"></span>LIVE</span>
         </div>
         <div class="pills"><span class="pill">AI</span><span class="pill">insurance</span><span class="pill">trust-first</span></div>
         <p class="ex-blurb">Reads your insurance policy in the moment of crisis and tells you exactly how to claim — every answer quoted verbatim from your actual policy, never guessed. English and Hindi. For India.</p>
@@ -852,7 +852,7 @@ body.motion-on .reveal{ opacity:0; }
     <div class="sec-head"><span class="sec-num">06 / colophon</span><h2 class="sec-title" id="s06-h">What I've shipped, and when.</h2></div>
     <div class="spine reveal" data-reveal="rise">
       <div class="spine-row"><span class="yr mono">now · live</span><span class="what">NoxNocTech</span><span class="chip live"><span class="vdot"></span>SHIPPED</span></div>
-      <div class="spine-row"><span class="yr mono">now</span><span class="what">ClaimSaathi</span><span class="chip progress"><span class="vdot"></span>IN PROGRESS</span></div>
+      <div class="spine-row"><span class="yr mono">now · live</span><span class="what">ClaimSarathi</span><span class="chip live"><span class="vdot"></span>LIVE</span></div>
       <div class="spine-row"><span class="yr mono">now</span><span class="what">ReTeach</span><span class="chip progress"><span class="vdot"></span>IN PROGRESS</span></div>
       <div class="spine-row"><span class="yr mono">now</span><span class="what">BoozyDEx</span><span class="chip progress"><span class="vdot"></span>IN PROGRESS</span></div>
     </div>
@@ -1295,7 +1295,7 @@ const ENGINE = (function(){
   return { build, drawConnector };
 })();
 
-/* ---------- ClaimSaathi fine-print wall (decorative texture) ---------- */
+/* ---------- ClaimSarathi fine-print wall (decorative texture) ---------- */
 (function buildWall(){
   const wall = document.getElementById('csWall');
   // intentionally illegible Latin texture — aria-hidden on the container
@@ -1376,7 +1376,7 @@ const ENGINE = (function(){
 /* ---------- MARQUEE ---------- */
 (function marquee(){
   const track = document.getElementById('marqueeTrack');
-  const items = ['NoxNocTech','ClaimSaathi','ReTeach','BoozyDEx','it quotes its sources','it admits what it can\u2019t read','a human stays in control','silence beats a confident wrong answer'];
+  const items = ['NoxNocTech','ClaimSarathi','ReTeach','BoozyDEx','it quotes its sources','it admits what it can\u2019t read','a human stays in control','silence beats a confident wrong answer'];
   const seq = items.concat(items); // duplicate for seamless loop, real selectable text
   seq.forEach(t => { const s = document.createElement('span'); s.textContent = t; track.appendChild(s); });
 })();
@@ -1397,7 +1397,7 @@ window.addEventListener('load', () => {
     ENGINE.build(false);
     document.body.classList.add('show-why'); // confidences shown as static labels
     document.getElementById('footMeterVal').textContent = '78%';
-    // lift the clause statically in ClaimSaathi
+    // lift the clause statically in ClaimSarathi
     const lift = document.querySelector('#csWall .fineline[data-lift]'); if (lift) lift.classList.add('lifted');
     // type the q
     document.getElementById('csQ1').textContent = "Dad's angioplasty — is the deluxe room covered?";
@@ -1463,7 +1463,7 @@ window.addEventListener('load', () => {
   /* vary the four exhibits' rhythm (directorial shot grammar) */
   const exShots = {
     'ex-noxnoctech': { x: -20, dur: 1.0 },
-    'ex-claimsaathi': { x: 24, dur: 0.95 },
+    'ex-claimsarathi': { x: 24, dur: 0.95 },
     'ex-reteach': { y: 28, dur: 0.85 },
     'ex-boozydex': { scale: 0.97, dur: 1.05 }
   };
@@ -1480,10 +1480,10 @@ window.addEventListener('load', () => {
     onEnter: () => ENGINE.build(true)
   });
 
-  /* ---- ClaimSaathi: type question, lift clause ---- */
+  /* ---- ClaimSarathi: type question, lift clause ---- */
   let csTyped = false;
   ScrollTrigger.create({
-    trigger: '#ex-claimsaathi', start: 'top 60%', once: true,
+    trigger: '#ex-claimsarathi', start: 'top 60%', once: true,
     onEnter: () => {
       if (csTyped) return; csTyped = true;
       const q = document.getElementById('csQ1');

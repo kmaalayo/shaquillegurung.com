@@ -54,5 +54,5 @@ shaquillegurung.com/
 
 - [ ] Wire the contact form to real email (Resend) and switch the front end from `mailto:` to `/api/contact`.
 - [ ] Add an Open Graph image (`/public/og.png`, 1200×630) for nice link previews.
-- [ ] Bring projects onto subdomains (e.g. `claimsaathi.shaquillegurung.com`).
+- [ ] Bring projects onto subdomains (e.g. `claimsarathi.shaquillegurung.com`).
 - [ ] Per-project detail pages.
